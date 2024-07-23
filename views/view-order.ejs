@@ -1,0 +1,40 @@
+<% layout("/layouts/boilerplate") %>
+<style>
+  .view-order{
+    padding: 6vw;
+    display: flex;
+    justify-content: center;
+  }
+  .view-order-in{
+    background: #ede3e3;
+    border-radius: 20px;
+    padding: 4vw;
+    display: grid;
+    justify-content: center;
+    gap: 1rem;
+  }
+  .view-order p{
+    text-align: start;
+  }
+</style>
+<div class="view-order">
+    <div class="view-order-in">
+        <h2>Order Details</h2>
+        <div style="display: grid;gap: 0.5rem;">
+            <p><strong>Order ID:</strong> <%= order._id %></p>
+            <p><strong>Occasion:</strong> <%= order.occasion %></p>
+            <p><strong>Event/Theme:</strong> <%= order.event %></p>
+            <p><strong>Event/Theme:</strong> <%= order.theme %></p>
+            <p><strong>Persons:</strong> <%= order.persons %></p>
+            <p><strong>Slot:</strong> <%= order.slot.date %> - <%= order.slot.time %></p>
+            <p><strong>Add-ons:</strong></p>
+
+            <p><strong>Billing Name:</strong> <%= order.billingName %></p>
+            <p><strong>Billing Email:</strong> <%= order.billingEmail %></p>
+            <p><strong>Status:</strong> <%= order.status %></p>
+            <p><strong>Created At:</strong> <%= order.createdAt %></p>
+        </div>
+
+        <a href="/admin">Back to Admin Panel</a>
+    </div>
+</div>

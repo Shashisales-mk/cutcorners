@@ -1,0 +1,48 @@
+<% layout("/layouts/boilerplate") %>
+
+  <section class="banner" style="background-image:url(https://via.placeholder.com/1920x300)">
+    <div class="container">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="index.html">Home</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Contact Us</li>
+      </ol>
+      <h2>Contact Us</h2>
+    </div>
+  </section>
+  <section class="gap">
+    <div class="container ">
+      <div class="row ">
+        <div class="col-lg-6">
+          <div class="box login mx-auto">
+            <h3>Log In Your Account</h3>
+            <form  action="/login" method="post">
+              <input type="email" name="email" id="email" placeholder="Username or email address"/>
+
+              <input type="text" name="role" id="role" placeholder="Enter role admin/user"/>
+
+              <input type="password" name="password" id="pass"  placeholder="Password"/>
+
+              <div class="remember">
+                <div class="first">
+                  <input type="checkbox" name="checkbox" id="checkbox">
+                  <label for="checkbox">Remember me</label>
+                </div>
+                <div class="second">
+                  <a href="/forgot-password">Forget a Password?</a>
+                </div>
+              </div>
+              <button type="submit" class="btn"><span>Login</span></button>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+
+
+  

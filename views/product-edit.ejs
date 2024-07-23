@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Edit Product</h1>
+<form action="/admin/products/<%= product._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+  <input type="text" name="name" value="<%= product.name %>" required>
+  <input type="number" name="price" value="<%= product.price %>" required>
+  <select name="category" required>
+    <% categories.forEach(category => { %>
+      <option value="<%= category._id %>" <%= category._id.equals(product.category) ? 'selected' : '' %>><%= category.name %></option>
+    <% }) %>
+  </select>
+  <img src="<%= product.image %>" alt="<%= product.name %>" width="100">
+  <input type="file" name="image">
+  <button type="submit">Update Product</button>
+</form>
+</body>
+</html>

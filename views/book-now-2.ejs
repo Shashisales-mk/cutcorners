@@ -1,0 +1,54 @@
+<% layout("/layouts/boilerplate") %>
+
+<section class="banner" style="background-image:url(/assets/img/background.jpg)">
+  <div class="container">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="/index">Home</a>
+      </li>
+      <li class="breadcrumb-item">
+        <a href="#">pages</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">Book Now</li>
+    </ol>
+    <h2>Book Now</h2>
+  </div>
+</section>
+
+
+<div class="container gap no-top">
+  <form action="/booking/select-addons" method="POST" id="addonForm">
+    <% categories.forEach(category => { %>
+      <div class="decoration-ideas"><br><br>
+        <h2><%= category.name.toUpperCase() %></h2>
+        <ul class="instagram-posts">
+          <% products.filter(product => product.category._id.toString() === category._id.toString()).forEach(product => { %>
+            <li>
+              <figure><img alt="<%= product.name %>" src="<%= product.image %>"></figure>
+              <br><h6><%= product.name %></h6>
+              <h6><span style="color:red">₹ <%= product.price %>/-</span></h6>
+              <input type="checkbox" name="addons" value="<%= product._id %>">
+            </li>
+          <% }) %>
+        </ul>
+      </div>
+    <% }) %>
+    <br>
+    <div style="display: flex;justify-content: center;gap: 2rem;">
+      <a href="/booking/select-occasion" class="btn"><span>PREVIOUS</span></a>
+    <button type="submit" class="btn"><span>NEXT</span></button>
+    </div>
+  </form>
+</div>
+
+<script>
+  document.getElementById('addonForm').addEventListener('submit', function(e) {
+    // Remove the preventDefault() call
+    const selectedAddons = Array.from(this.elements.addons)
+      .filter(checkbox => checkbox.checked)
+      .map(checkbox => checkbox.value);
+    
+    // Remove the check for selectedAddons.length and the alert
+    // The form will now submit regardless of whether add-ons are selected or not
+  });
+  </script>

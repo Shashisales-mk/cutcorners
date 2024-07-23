@@ -1,0 +1,104 @@
+
+<% layout("/layouts/boilerplate") %>
+
+<style>
+    .top-brands-in{
+      display: flex;
+      /* position: relative; */
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1vw;
+    }
+    .top-brands-in .ras{
+      position: absolute;
+      bottom: 0%;
+      left: 34%;
+    }
+    ul.top-brands {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+</style>
+
+<section class="banner" style="background-image:url(/assets/img/background.jpg)" >
+    <div class="container">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="/">Home</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="#">pages</a>
+        </li>
+          <li class="breadcrumb-item active" aria-current="page">Book Now</li>
+      </ol>
+      <h2>Boook Now</h2>
+    </div>
+  </section>
+
+  <div class="gap">
+    <div class="container" style="position: relative;">
+      <div class="row align-items-center" style="display: flex;justify-content: center;">
+        <div class="col-xl-12">
+          <div class="heading two">
+            <h2 style="text-align: center;"><b>Select Your Occasion</b></h2>
+          </div>
+        </div>
+        
+        <div class="col-xl-11" style="margin-bottom: 8vw;">
+          <ul class="top-brands mb-0">
+            <form class="top-brands-in" action="/booking/select-occasion" method="POST">
+              <% occasions.forEach(occasion => { %>
+                <li style="width: 22%;display: grid;justify-content: center;">
+                  <img style="height: 170px;width: 170px;" src="<%= occasion.imageUrl %>" alt="<%= occasion.name %>">
+                  <p align="center"><span style="color:red"><b><%= occasion.name %></b></span></p>
+                  <input style="display: flex;justify-content: center;" type="radio" name="occasionId" value="<%= occasion._id %>">
+                  <input type="hidden" name="occasionName" value="<%= occasion.name %>">
+                </li>
+                  <% }); %>
+                  <div class="ras" style="display: flex;justify-content: center;gap: 2rem;">
+                    <a href="/book-now" class="btn"><span>PREVIOUS</span></a>
+                    <button type="submit" class="btn"><span>NEXT</span></button>
+                  </div>
+            </form>
+           
+            
+          </ul>
+        </div>
+        
+      </div>
+      <!-- <br><br><center><a href="/book-now-2" class="btn"><span>NEXT</span></a></center> -->
+    </div>
+  </div>
+
+
+
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('occasionForm');
+  const radioButtons = form.querySelectorAll('input[type="radio"]');
+  
+  radioButtons.forEach(radio => {
+    radio.addEventListener('change', function() {
+      radioButtons.forEach(rb => {
+        if (rb !== this) {
+          rb.closest('li').style.opacity = '0.5';
+        } else {
+          rb.closest('li').style.opacity = '1';
+        }
+      });
+    });
+  });
+
+  form.addEventListener('submit', function(e) {
+    if (!form.occasion.value) {
+      e.preventDefault();
+      alert('Please select an occasion');
+    }
+  });
+});
+</script>

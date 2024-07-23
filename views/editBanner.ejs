@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Banner</title>
+</head>
+<body>
+    <h1>Edit Banner</h1>
+    <form action="/edit/<%= banner._id %>" method="POST" enctype="multipart/form-data">
+        <img src="<%= banner.imageUrl %>" alt="<%= banner.title %>" width="100">
+        <input type="file" name="image">
+        <input type="text" name="title" value="<%= banner.title %>" required>
+        <input type="text" name="subtitle" value="<%= banner.subtitle %>" required>
+        <textarea name="description" required><%= banner.description %></textarea>
+        <button type="submit">Update Banner</button>
+    </form>
+</body>
+</html>

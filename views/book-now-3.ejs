@@ -1,0 +1,43 @@
+<% layout("/layouts/boilerplate") %>
+
+  <section class="banner" style="background-image:url(/assets/img/background.jpg)">
+    <div class="container">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="#">pages</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Select Services</li>
+      </ol>
+      <h2>Select Services</h2>
+    </div>
+  </section>
+  
+  <div class="container gap no-top">
+    <form action="/booking/select-services" method="POST" id="serviceForm">
+      <% categories.forEach(category => { %>
+        <div class="decoration-ideas"><br><br>
+          <h2><%= category.name.toUpperCase() %></h2>
+          <ul class="instagram-posts">
+            <% products.filter(product => product.category._id.toString() === category._id.toString()).forEach(product => { %>
+              <li>
+                <figure><img alt="<%= product.name %>" src="<%= product.image %>"></figure>
+                <br><h6><%= product.name %></h6>
+                <h6><span style="color:red">₹ <%= product.price %>/-</span></h6>
+                <input type="checkbox" name="services" value="<%= product._id %>">
+              </li>
+            <% }) %>
+          </ul>
+        </div>
+      <% }) %>
+      <br>
+      <div style="display: flex;justify-content: center;gap: 2rem;">
+        <a href="/booking/select-addons" class="btn"><span>PREVIOUS</span></a>
+        <button type="submit" class="btn"><span>NEXT</span></button>
+      </div>
+    </form>
+  </div>
+
+<script>
+  document.getElementById('serviceForm').addEventListener('submit', function(e) {
+    // The form will submit regardless of whether services are selected or not
+  });
+</script>

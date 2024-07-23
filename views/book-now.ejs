@@ -1,0 +1,174 @@
+<% layout("/layouts/boilerplate") %>
+
+<section class="banner" style="background-image:url(assets/img/background.jpg)" >
+    <div class="container">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="index.html">Home</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="#">pages</a>
+        </li>
+          <li class="breadcrumb-item active" aria-current="page">Book Now</li>
+      </ol>
+      <h2>Book Now</h2>
+    </div>
+  </section>
+
+  <section class="gap no-top">
+    <div class="container">
+      <br><br><br>
+      <div class="row" align="center">
+        <div class="quote-box">
+            <div class="row">
+              <div class="col-lg-4"></div>
+              <div class="col-lg-4">
+                  <h3 algin="center">Select Date</h3><br>
+                  <form class="checkout-meta donate-page" id="dateForm">
+                    <input type="date" class="input-text" name="date" placeholder="Select Date" required>
+                  </form>
+              </div>
+              <div class="col-lg-4"></div>
+            </div>
+        </div>
+      </div>
+      <section class="gap">
+        <div class="container">
+          <div class="row" align="center">
+            <div class="col-lg-4 col-md-6">
+              <div class="item">
+                <div class="balloon-shap" align="center">
+                  <img alt="balloon" src="assets/img/birthday.png">
+                </div><br>
+                <h3>PRIVATE SCREEN - 1</h3><br>
+                <div class="row">
+                  <div class="col-lg-2"></div>
+                  <div class="col-lg-8">
+                  <ul>
+                    <li>
+                      <form class="checkout-meta donate-page" action="/booking/select-screen" method="POST">
+                        <input type="hidden" name="screen" value="private-screen-1">
+                        <select name="timeSlot" class="nice-select Advice country_to_state" required>
+                          <option value="">AVAILABLE SLOTS</option>
+                          <% ptSlots.forEach(slot => { %>
+                            <option value="<%= slot.time %>"><%= slot.time %></option>
+                          <% }) %>
+                        </select>
+            
+                        <select name="numberOfPeople" class="nice-select Advice country_to_state" required>
+                          <option value="">No Of People</option>
+                          <option value="1">1</option>
+                          <option value="2">2</option>
+                          <option value="3">3</option>
+                          <option value="4">4</option>
+                         </select>
+                         <input type="hidden" name="date" id="dateInput1">
+                         <div class="checkout-side"><br>
+                           <center><button type="submit" class="btn"><span>BOOK THIS SLOT</span></button></center>
+                         </div>
+                       </form>
+                    </li>
+                  </ul>
+                </div>
+                <div class="col-lg-2"></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="item">
+                <div class="balloon-shap" align="center">
+                  <img alt="balloon" src="assets/img/birthday.png">
+                </div><br>
+                <h3>PRIVATE SCREEN - 2</h3><br>
+                <div class="row">
+                  <div class="col-lg-2"></div>
+                  <div class="col-lg-8">
+                  <ul>
+                    <li>
+                      <form class="checkout-meta donate-page" action="/booking/select-screen" method="POST">
+                        <input type="hidden" name="screen" value="private-screen-2">
+                        <select name="timeSlot" class="nice-select Advice country_to_state" required>
+                          <option value="">AVAILABLE SLOTS</option>
+                          <% ptSlots.forEach(slot => { %>
+                            <option value="<%= slot.time %>"><%= slot.time %></option>
+                          <% }) %>
+                        </select>
+            
+                        <select name="numberOfPeople" class="nice-select Advice country_to_state" required>
+                          <option value="">No Of People</option>
+                          <option value="4">4</option>
+                          <option value="5">5</option>
+                          <option value="6">6</option>
+                          <option value="7">7</option>
+                          <option value="8">8</option>
+                          <option value="9">9</option>
+                          <option value="10">10</option>
+                          <option value="11">11</option>
+                          <option value="12">12</option>
+                         </select>
+                         <input type="hidden" name="date" id="dateInput2">
+                         <div class="checkout-side"><br>
+                           <center><button type="submit" class="btn"><span>BOOK THIS SLOT</span></button></center>
+                         </div>
+                       </form>
+                    </li>
+                  </ul>
+                </div>
+                <div class="col-lg-2"></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="item">
+                <div class="balloon-shap" align="center">
+                  <img alt="balloon" src="assets/img/birthday.png">
+                </div><br>
+                <h3>PARTY HALL</h3><br>
+                <div class="row">
+                  <div class="col-lg-2"></div>
+                  <div class="col-lg-8">
+                  <ul>
+                    <li>
+                      <form class="checkout-meta donate-page" action="/booking/select-screen" method="POST">
+                        <input type="hidden" name="screen" value="party-hall">
+                        <select name="timeSlot" class="nice-select Advice country_to_state" required>
+                          <option value="">AVAILABLE SLOTS</option>
+                          <% phSlots.forEach(slot => { %>
+                            <option value="<%= slot.time %>"><%= slot.time %></option>
+                          <% }) %>
+                        </select>
+                        <select name="numberOfPeople" class="nice-select Advice country_to_state" required>
+                          <option value="">No Of People</option>
+                          <option value="15">15</option>
+                          <option value="20">20</option>
+                          <option value="25">25</option>
+                          <option value="30">30</option>
+                          <option value="35">35</option>
+                          <option value="45">45</option>
+                        </select>
+                        <input type="hidden" name="date" id="dateInput3">
+                        <div class="checkout-side"><br>
+                          <center><button type="submit" class="btn"><span>BOOK THIS SLOT</span></button></center>
+                        </div>
+                       </form>
+                    </li>
+                  </ul>
+                </div>
+                <div class="col-lg-2"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </section>
+
+<script>
+document.getElementById('dateForm').addEventListener('change', function() {
+  var date = this.elements.date.value;
+  document.getElementById('dateInput1').value = date;
+  document.getElementById('dateInput2').value = date;
+  document.getElementById('dateInput3').value = date;
+});
+</script>

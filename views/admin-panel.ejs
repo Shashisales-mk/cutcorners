@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banner Management</title>
+    <meta name="description" content="cutcorners">
+
+
+    <link rel="icon" href="assets/img/favicon1.png">
+
+    <style>
+        body {
+            display: block;
+            margin: 0;
+        }
+        header{
+            z-index: 1;
+            position: fixed;
+            background: #672b83;
+            width: 100%;
+        }
+        header ul {
+            margin: 2vw 3vw;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header li{
+            list-style: none;
+        }
+        .jad{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .dfac{
+            display: flex;
+            align-items: center;
+        }
+        .hmp{
+            background: #d7e0e8;
+            margin: -3vw -3vw 0 -3vw;
+            padding: 1vw 3vw;
+        }
+        .admin-container{
+            display: flex;
+        }
+        .sidebar-menu{
+            font-size: 1rem;
+            font-family: Arial, Helvetica, sans-serif;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            display: grid;
+            width: 10%;
+            background: rgb(0, 0, 0);
+            color: rgb(255, 255, 255);
+        }
+        .sidebar-menu ul{
+            margin-top: 10vw;
+            padding: 0;
+        }
+        .sidebar-menu li{
+            border-bottom: 1px solid;
+            list-style: none;
+            padding: 1.4vw 1vw;
+            text-align: center;
+        }
+        .sidebar-menu li:hover{
+            background: rgb(186, 147, 62);
+            cursor: pointer;
+        }
+        .sidebar-menu li.active {
+            background-color: rgb(186, 147, 62);
+        }
+        .container-right{
+            margin-top: 10vw;
+            width: 90%;
+            margin-left: 12vw;
+        }
+        .cont-in{
+            padding: 1vw 3vw;
+            margin-right: 2vw;
+            margin-bottom: 5vw;
+            background: #b4becc38;
+            font-family: sans-serif;
+        }
+        .container-right h2{
+            text-decoration: underline;
+        }
+        .banner-section{
+            margin-top: 2vw;
+        }
+        .banner-section a, .add-ons-section a, #addItemForm button,#itemList button, #banner-form input, #banner-form button, #edit-banner input, #edit-banner button, #show-new-cat button, .cont-in button, #occasion-list button, #add-occasion, #occasion-form button{
+            padding: 0.6vw 2vw;
+            background: #672b83;
+            color: white;
+            text-decoration: none;
+            font-size: 1.3vw;
+            font-weight: 700;
+            border-radius: 6px;
+            border: 0;
+        }
+        .banner-section a:hover, .add-ons-section a:hover, #addItemForm button:hover,#itemList button:hover, #banner-form input:hover, #banner-form button:hover, .cont-in button:hover, #occasion-list button:hover, #add-occasion:hover, #occasion-form button:hover{
+            cursor: pointer;
+        }
+        #banner-form input{
+            font-size: 0.9vw;
+        }
+        .banner-section ul, #show-new-cat ul{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            gap: 5vw;
+        }
+        #show-new-cat ul{
+            display: grid;
+            gap: 2vw;
+        }
+        #show-new-cat li{
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5vw;
+            font-weight: 700;
+        }
+        .banner-section li{
+            display: flex;
+            gap: 5vw;
+            align-items: center;
+        }
+        .banner-section img{
+            height: 10vw;
+            width: 23vw;
+            border-radius: 5px;
+        }
+        .banner-section p{
+            display: grid;
+            gap: 2vw;
+        }
+        #addItemForm input, #show-new-cat input, .cont-in input, #occasion-form input, .newpgfrm textarea{
+            padding: 0.6vw 2vw;
+            font-size: 1.3vw;
+            border: 0px solid #000;
+            border-radius: 5px;
+            background: #a7b8bf6e;
+            outline: none;
+        }
+        select{
+            padding: 0.5vw 1vw;
+            font-size: 1.2vw;
+            background: black;
+            color: white;
+        }
+        #itemList{
+            display: grid;
+            gap: 1rem;
+        }
+        #itemList li{
+            width: 40%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.3vw;
+        }
+        #banner-form {
+            margin-top: 1rem;
+            gap: 1rem;
+        }
+        #edit-banner{
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        .add-ons-section, .party-by-theme {
+            display: none;
+        }
+        #show-edit-event, #show-delete-event{
+            display: none;
+        }
+        .occasion-section img{
+            height: 5vw;
+            width: 5vw;
+            border-radius: 5px;
+        }
+        .m2 li, #occasion-list li{
+            font-size: 1.4vw;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .edit-addon input{
+            width: 10vw;
+        }
+        .ad input, .ad select{
+            width: 10vw;
+        }
+        .newpgfrm form{
+            display: grid;
+            width: 70%;
+        }
+        .newpgfrm label, .newpgfrm button{
+            margin-top: 2vw;
+        }
+        .newpgfrm button{
+            width: 30%;
+        }
+        .newpgfrm button:hover{
+            cursor: pointer;
+        }
+        .booking-section input{
+            width: 7vw;
+        }
+        li{
+            list-style: none;
+        }
+        ul{
+            padding: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 2px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+            text-align: center;
+        }
+        .order-form form option:hover{
+            background: blue;
+        }
+        .order-form form div{
+            background: #dae7e7c4;
+            padding: 1vw;
+            border-radius: 1vw;
+            display: flex;
+            gap: 1rem;
+        }
+        .order-form ul li{
+            margin-top: 1vw;
+            display: flex;
+            align-items: center;
+            gap: 2vw;
+            background: #bcc9cf;
+            padding: 0.5vw;
+        }
+        .order-form form div:nth-child(4){
+            margin-top: 2rem;
+        }
+        /* .order-form form button{
+            width: 100%;
+        } */
+        .order-form form div:nth-child(6){
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-admin-container">
+        <!-- <div style="background: #672b83; position: fixed;">
+            <header class="admin-header">
+                <div class="logo">
+                    <a href="/">
+                      <img alt="logo" src="assets/img/logo1.png">
+                    </a>
+                </div>
+                <div>CutCorners Admin</div>
+            </header>
+        </div> -->
+        <header>
+            <ul>
+                <li><a href="/"><img alt="logo" height="40" width="60" style="height: 5vw; width: 10vw;"
+                            src="assets/img/logo1.png"></a></li>
+                <li></li>
+            </ul>
+        </header>
+        <div class="admin-container">
+            <div class="sidebar-menu">
+                <ul>
+                    <li class="active" id="show1">Dashboard</li>
+                    <li class="showe" id="show2">Home Banners</li>
+                    <li id="show3">Add on's</li>
+                    <li id="show4">Events</li>
+                    <li id="show5">Manage Occasions</li>
+                    <!-- <li id="show6">Pages</li> -->
+                    <li id="show7">Booking</li>
+                </ul>
+            </div>
+            <div class="container-right">
+                <h1 style="font-size: 3vw;">Welcome CutCorners Admin!</h1>
+                <div class="cont-in">
+                    <div class="dashboard-section" style="margin-top: 2vw;">
+                        <h1 class="hmp">Dashboard Section</h1>
+                    </div>
+                    <div class="banner-section" style="display: none;">
+                        <h1 class="hmp">Banner Management</h1>
+                        <!-- <a href="#" id="add-banner">Add Banner</a> -->
+                        <h2>Add Banner</h2>
+                        <form id="banner-form" action="/add" method="POST" enctype="multipart/form-data">
+                            <input type="file" name="image" required>
+                            <!-- <input type="text" name="title" placeholder="Title" required>
+                            <input type="text" name="subtitle" placeholder="Subtitle" required>
+                            <textarea name="description" placeholder="Description" required></textarea> -->
+                            <button type="submit">Add Banner</button>
+                        </form>
+                        <ul>
+                            <% banners.forEach(banner=> { %>
+                                <li>
+                                    <img src="<%= banner.imageUrl %>" alt="<%= banner.title %>" width="100">
+                                    <p>
+                                        <!-- <a href="/edit/<%= banner._id %>">Edit</a> -->
+                                        <a href="/delete/<%= banner._id %>">Delete</a>
+                                    </p>
+                                </li>
+                                <% }) %>
+                        </ul>
+                    </div>
+
+                    <div class="add-ons-section" style="margin-top: 2vw;">
+                        <div>
+                            <h1 class="hmp">Add On's</h1>
+                            <div style="display: grid;gap: 5vw;">
+                                <div class="m1" style="padding: 0rem 2rem 0rem 0rem;">
+                                    <!-- <a href="/admin/categories" id="manage-category">Manage Categories</a> -->
+                                    <!-- <h2>MANAGE CATEGORIES</h2> -->
+                                    <div id="show-category">
+                                        <!-- <h1>Categories</h1> -->
+                                        <!-- <a href="/admin/categories/new" id="new-cat">Add New Category</a> -->
+                                        <div id="show-new-cat">
+                                            <h2>Add New Category</h2>
+                                            <form action="/admin/categories" method="POST">
+                                                <input type="text" name="name" required>
+                                                <div style="margin: 2vw 0;">
+                                                    <label for="type">Category Type:</label>
+                                                    <select id="type" name="type" required>
+                                                        <option value="addon">Add-on</option>
+                                                        <option value="service">Service</option>
+                                                    </select>
+                                                </div>
+                                                <button type="submit">Add Category</button>
+                                            </form>
+
+                                            <ul>
+                                                <li class="dfac" style="gap:2rem;width: 100%;">
+
+                                                    <table>
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="width: 20vw;">Category Name</th>
+                                                                <th>Delete Category</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <% categories.forEach(category=> { %>
+                                                                <tr>
+                                                                    <td>
+                                                                        <%= category.name %>
+                                                                    </td>
+                                                                    <td>
+                                                                        <form
+                                                                            action="/admin/categories/<%= category._id %>?_method=DELETE"
+                                                                            method="POST">
+                                                                            <button type="submit">Delete</button>
+                                                                        </form>
+                                                                    </td>
+                                                                </tr>
+                                                                <% }) %>
+
+                                                        </tbody>
+                                                    </table>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="m2" style="padding-top: 2rem;">
+                                    <!-- <a href="#" id="manage-prod">Manage Products</a> -->
+                                    <!-- <h2>MANAGE PRODUCTS</h2> -->
+
+                                    <h2 id="mp1">Add New Product</h2>
+
+                                    <!-- <a href="#" id="new-product">Add New Product</a> -->
+                                    <div>
+                                        <form class="ad dfac" style="gap: 1rem;" id="new-product-form"
+                                            action="/admin/products" method="POST" enctype="multipart/form-data">
+
+
+                                            <input type="text" name="name" required placeholder="Name">
+                                            <input type="number" name="price" required placeholder="Price">
+                                            <select name="category" required>
+                                                <% categories.forEach(category=> { %>
+                                                    <option value="<%= category._id %>">
+                                                        <%= category.name %>
+                                                    </option>
+                                                    <% }) %>
+                                            </select>
+                                            <input type="file" name="image" required>
+                                            <button type="submit">Add Product</button>
+                                        </form>
+                                    </div>
+
+                                    <div id="show-mp1" style="margin-top: 2rem;">
+                                        <ul style="display: grid;gap: 1rem;">
+
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Img</th>
+                                                        <th style="width: 20vw;">Product Name</th>
+                                                        <th>Delete Product</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% products.forEach(product=> { %>
+                                                        <tr>
+                                                            <td><img style="height: 5vw;width: 5vw;border-radius: 5px;"
+                                                                    src="<%= product.image %>" alt="<%= product.name %>"
+                                                                    height="100" width="100"></td>
+                                                            <td>
+                                                                <p>
+                                                                    <%= product.name %> - <%= product.price %> - <%=
+                                                                                product.category.name %>
+                                                                </p>
+                                                            </td>
+                                                            <td>
+                                                                <form
+                                                                    action="/admin/products/<%= product._id %>?_method=DELETE"
+                                                                    method="POST">
+                                                                    <button type="submit">Delete</button>
+                                                                </form>
+                                                            </td>
+                                                        </tr>
+                                                        <% }) %>
+
+                                                </tbody>
+                                            </table>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="party-by-theme" style="margin-top: 2vw;display: none;">
+                        <h1 class="hmp">Party by Theme Section</h1>
+                        <h2>Add New Theme</h2>
+                        <form id="addItemForm">
+                            <input type="text" id="itemName" placeholder="Item Name" required>
+                            <input type="text" id="itemLink" placeholder="Item Link" required>
+                            <select id="itemCategory">
+                                <option value="event">Event</option>
+                                <option value="theme">Theme</option>
+                            </select>
+                            <button type="submit">Add Item</button>
+                        </form>
+                        <h2>Current Menu Items</h2>
+                        <ul id="itemList"></ul>
+                    </div>
+
+
+                    <div class="occasion-section" style="display:none;margin-top: 2vw;">
+                        <h1 class="hmp">Manage Occasion Section</h1>
+                        <div style="margin-top: 2rem;">
+                            <a href="#" id="add-occasion" style="margin-top: 2rem;">Add Occasion</a>
+                        </div>
+                        <form id="occasion-form" style="margin-top: 2rem;" action="/admin/occasions" method="POST"
+                            enctype="multipart/form-data">
+                            <input type="text" name="name" placeholder="Occasion Name" required>
+                            <input type="file" name="image" required>
+                            <button type="submit">Add Occasion</button>
+                        </form>
+                        <ul id="occasion-list" style="display: grid;gap: 1rem;">
+                            <% occasions.forEach(occasion=> { %>
+                                <li style="margin-top: 1rem;">
+                                    <img style="border-radius: 5px;" src="<%= occasion.imageUrl %>"
+                                        alt="<%= occasion.name %>" width="100">
+                                    <%= occasion.name %>
+                                        <form action="/admin/occasions/<%= occasion._id %>?_method=DELETE"
+                                            method="POST">
+                                            <button type="submit">Delete</button>
+                                        </form>
+                                        <form action="/admin/occasions/<%= occasion._id %>?_method=PUT" method="POST">
+                                            <input type="checkbox" name="popular" value="true" <%=occasion.popular
+                                                ? 'checked' : '' %> onchange="this.form.submit()"> Popular
+                                        </form>
+                                </li>
+                                <% }) %>
+                        </ul>
+                    </div>
+
+
+
+
+                    <!-- <div class="newpgfrm" style="display:none;margin-top: 2vw;">
+                        <h1 class="hmp">Create New Page</h1>
+                        <form id="createPageForm">
+                            <label for="pageName">Page Name:</label>
+                            <input type="text" id="pageName" name="pageName" required>
+    
+                            <label for="pageTitle">Page Title:</label>
+                            <input type="text" id="pageTitle" name="pageTitle" required>
+    
+                            <label for="pageHeading">Page Heading:</label>
+                            <input type="text" id="pageHeading" name="pageHeading" required>
+    
+                            <label for="pageContent">Page Content:</label>
+                            <textarea id="pageContent" name="pageContent" rows="10" required></textarea>
+    
+                            <button type="submit">Create Page</button>
+                        </form>
+
+
+                        <h2>Created Pages</h2>
+                        <ul id="pageList"></ul>
+                    </div> -->
+
+
+                    <div class="booking-section" style="display:none;margin-top: 2vw;">
+                        <h1 class="hmp">Booking Section</h1>
+
+
+                        <!-- Search and Sort Form -->
+                        <form action="/admin-panel" class="sf" method="GET">
+                            <input type="text" name="search" placeholder="Search by Order ID or Event"
+                                value="<%= search %>">
+                            <select name="sortBy">
+                                <option value="dateDesc" <%=sortBy==='dateDesc' ? 'selected' : '' %>>Newest First
+                                </option>
+                                <option value="dateAsc" <%=sortBy==='dateAsc' ? 'selected' : '' %>>Oldest First</option>
+                            </select>
+                            <button type="submit">Apply Filters</button>
+                        </form>
+
+
+                        <!-- Booking Confirmations List -->
+                        <div class="booking-conf">
+                            <h2>BOOKING CONFIRMATIONS</h2>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Ocassion</th>
+                                        <th>Event</th>
+                                        <th>Theme</th>
+                                        <th>Persons</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% orders.forEach(order=> { %>
+                                        <tr>
+                                            <td>
+                                                <%= order._id %>
+                                            </td>
+                                            <td>
+                                                <%= order.occasion ? order.occasion.name : 'N/A' %>
+                                            </td>
+                                            <td>
+                                                <%= order.event %>
+                                            </td>
+                                            <td>
+                                                <%= order.theme %>
+                                            </td>
+                                            <td>
+                                                <%= order.persons %>
+                                            </td>
+                                            <td>
+                                                <%= order.status %>
+                                            </td>
+                                            <td>
+                                                <a href="/order/view-order/<%= order._id %>">View</a>
+                                                <% if (order.status !=='cancelled' ) { %>
+                                                    <a href="/order/cancel-order/<%= order._id %>">Cancel</a>
+                                                    <% } %>
+                                            </td>
+                                        </tr>
+                                        <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Add Order Form -->
+                        <div class="order-form">
+                            <h2>Add New Order</h2>
+                            <form action="/order/add-order" method="POST">
+
+                                <div style="display: flex;gap: 1rem;">
+                                    <p>
+                                        <label for="occasion">Occasion:</label>
+                                        <select id="occasion" name="occasion" required>
+                                            <% occasions.forEach(occasion=> { %>
+                                                <option value="<%= occasion._id %>">
+                                                    <%= occasion.name %>
+                                                </option>
+                                                <% }); %>
+                                        </select>
+                                    </p>
+
+                                    <p>
+                                        <label for="event">Event:</label>
+                                        <select id="event" name="event" required>
+                                            <% menuItems.filter(item=> item.category === 'event').forEach(item => { %>
+                                                <option value="<%= item.name %>">
+                                                    <%= item.name %>
+                                                </option>
+                                                <% }); %>
+                                        </select>
+                                    </p>
+
+                                    <p>
+                                        <label for="theme">Theme:</label>
+                                        <select id="theme" name="theme" required>
+                                            <% menuItems.filter(item=> item.category === 'theme').forEach(item => { %>
+                                                <option value="<%= item.name %>">
+                                                    <%= item.name %>
+                                                </option>
+                                                <% }); %>
+                                        </select>
+                                    </p>
+
+                                    <p>
+                                        <label for="persons">Persons:</label>
+                                        <input type="number" id="persons" name="persons" required>
+                                    </p>
+
+                                    <p>
+                                        <label for="slot">Slot:</label>
+                                        <select id="slot" name="slot" required>
+                                            <% if (availableSlots && availableSlots.length> 0) { %>
+                                                <% availableSlots.forEach(slot=> { %>
+                                                    <option value="<%= slot._id %>">
+                                                        <%= slot.date %> - <%= slot.time %>
+                                                    </option>
+                                                    <% }); %>
+                                                        <% } else { %>
+                                                            <option value="">No available slots</option>
+                                                            <% } %>
+                                        </select>
+                                    </p>
+                                </div>
+
+                                <p style="float: right;">Debug: Number of available slots: <%= availableSlots ?
+                                        availableSlots.length : 0 %>
+                                </p>
+
+                                <div style="display: flex;gap: 2rem;margin-top: 3rem;">
+                                    <p>
+                                        <label for="categories">Categories:</label>
+                                        <select id="categories" name="categories[]" multiple required>
+                                            <% categories.forEach(category=> { %>
+                                                <option value="<%= category._id %>" data-price="<%= category.price %>">
+                                                    <%= category.name %> - $<%= category.price %>
+                                                </option>
+                                                <% }); %>
+                                        </select>
+                                    </p>
+
+                                    <p>
+                                        <label for="products">Products:</label>
+                                        <select id="products" name="products[]" multiple required>
+                                            <% products.forEach(product=> { %>
+                                                <option value="<%= product._id %>" data-price="<%= product.price %>">
+                                                    <%= product.name %> - $<%= product.price %>
+                                                </option>
+                                                <% }); %>
+                                        </select>
+                                    </p>
+                                </div>
+
+
+
+                                <div style="display: flex;gap: 2rem;">
+                                    <p>
+                                        <label for="billingName">Billing Name:</label>
+                                        <input type="text" id="billingName" name="billingName" required>
+                                    </p>
+
+                                    <p>
+                                        <label for="billingEmail">Billing Email:</label>
+                                        <input type="email" id="billingEmail" name="billingEmail" required>
+                                    </p>
+
+                                    <p>
+                                        <label for="date">Date:</label>
+                                        <input type="date" id="date" name="date" required>
+                                    </p>
+
+
+
+                                    <p>
+                                        <label for="billingPhone">Billing Phone:</label>
+                                        <input type="tel" id="billingPhone" name="billingPhone" required>
+                                    </p>
+
+                                    <p>
+                                        <label for="totalAmount">Total Amount:</label>
+                                        <input type="number" id="totalAmount" name="totalAmount" required>
+                                    </p>
+                                </div>
+
+                                <h3>Billing Details</h3>
+                                <div style="display: flex;gap: 2rem;">
+                                    <p>
+                                        <label for="hallRent">Hall Rent:</label>
+                                        <input type="number" id="hallRent" name="billingDetails[hallRent]" value="0"
+                                            required>
+                                    </p>
+
+                                    <p><label for="additionalPersonCharge">Additional Person Charge:</label>
+                                        <input type="number" id="additionalPersonCharge"
+                                            name="billingDetails[additionalPersonCharge]" value="0" required>
+                                    </p>
+
+                                    <p><label for="addonsBill">Add-ons Bill:</label>
+                                        <input type="number" id="addonsBill" name="billingDetails[addonsBill]" value="0"
+                                            readonly>
+                                    </p>
+
+                                    <p>
+                                        <label for="servicesBill">Services Bill:</label>
+                                        <input type="number" id="servicesBill" name="billingDetails[servicesBill]"
+                                            value="0" readonly>
+                                    </p>
+                                </div>
+
+                                <button type="submit">Add Order</button>
+                            </form>
+
+
+                            <h2>Add New Slot</h2>
+                            <form action="/slot/add-slot" method="POST">
+                                <input type="text" name="time" placeholder="Time" required>
+                                <select name="type" required>
+                                    <option value="pt">PT</option>
+                                    <option value="ph">PH</option>
+                                </select>
+                                <button type="submit">Add Slot</button>
+                            </form>
+
+                            <h2>Existing Slots</h2>
+                            <ul>
+                                <% slots.forEach(slot=> { %>
+                                    <li style="margin-top: 1vw;display: flex;gap: 2vw;">
+                                        <p style="width: 30vw;">
+                                            <%= slot.time %> - <%= slot.type %>
+                                                    (<%= slot.isAvailable ? 'Available' : 'Unavailable' %>)
+                                        </p>
+                                        <form action="/slot/update-slot/<%= slot._id %>" method="POST"
+                                            style="display: inline;width: 20vw;">
+                                            <button type="submit">
+                                                <%= slot.isAvailable ? 'Make Unavailable' : 'Make Available' %>
+                                            </button>
+                                        </form>
+                                        <form action="/slot/delete-slot/<%= slot._id %>" method="POST"
+                                            style="display: inline;">
+                                            <button type="submit">Delete</button>
+                                        </form>
+                                    </li>
+                                    <% }); %>
+                            </ul>
+                        </div>
+                    </div>
+
+
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- <h1>Banner Management</h1>
+    <a href="/add">Add Banner</a>
+    <ul>
+        <% banners.forEach(banner => { %>
+            <li>
+                <img src="<%= banner.imageUrl %>" alt="<%= banner.title %>" width="100">
+               
+                <a href="/edit/<%= banner._id %>">Edit</a>
+                <a href="/delete/<%= banner._id %>">Delete</a>
+            </li>
+        <% }) %>
+    </ul>
+
+    <a href="/admin/categories">Manage Categories</a>
+<a href="/admin/products">Manage Products</a>
+
+
+<h1>Menu Item Admin</h1>
+    
+<h2>Add New Menu Item</h2>
+<form id="addItemForm">
+    <input type="text" id="itemName" placeholder="Item Name" required>
+    <input type="text" id="itemLink" placeholder="Item Link" required>
+    <select id="itemCategory">
+        <option value="event">Event</option>
+        <option value="theme">Theme</option>
+    </select>
+    <button type="submit">Add Item</button>
+</form>
+
+<h2>Current Menu Items</h2>
+<ul id="itemList"></ul> -->
+
+
+    <!-- <h1>Create New Page</h1>
+<form id="createPageForm">
+    <label for="pageName">Page Name:</label>
+    <input type="text" id="pageName" name="pageName" required>
+    
+    <label for="pageTitle">Page Title:</label>
+    <input type="text" id="pageTitle" name="pageTitle" required>
+    
+    <label for="pageHeading">Page Heading:</label>
+    <input type="text" id="pageHeading" name="pageHeading" required>
+    
+    <label for="pageContent">Page Content:</label>
+    <textarea id="pageContent" name="pageContent" rows="10" required></textarea>
+    
+    <button type="submit">Create Page</button>
+</form>
+
+
+<h2>Created Pages</h2>
+<ul id="pageList"></ul> -->
+
+
+
+    <!-- <div class="occasion-section" style="margin-top: 5vw;">
+    <h1>Manage Occasions</h1>
+    <a href="#" id="add-occasion">Add Occasion</a>
+    <form id="occasion-form" action="/admin/occasions" method="POST" enctype="multipart/form-data" style="display: none;">
+        <input type="text" name="name" placeholder="Occasion Name" required>
+        <input type="file" name="image" required>
+        <button type="submit">Add Occasion</button>
+    </form>
+    <ul id="occasion-list">
+        <% occasions.forEach(occasion => { %>
+            <li>
+                <img src="<%= occasion.imageUrl %>" alt="<%= occasion.name %>" width="100">
+                <%= occasion.name %>
+                <form action="/admin/occasions/<%= occasion._id %>?_method=DELETE" method="POST">
+                    <button type="submit">Delete</button>
+                </form>
+            </li>
+        <% }) %>
+    </ul>
+</div> -->
+
+
+
+
+
+
+
+
+    <!-- script of orders -->
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const categoriesSelect = document.getElementById('categories');
+            const productsSelect = document.getElementById('products');
+            const addonsBillInput = document.getElementById('addonsBill');
+            const servicesBillInput = document.getElementById('servicesBill');
+
+            function calculateBills() {
+                let addonsBill = 0;
+                let servicesBill = 0;
+
+                // Calculate for categories
+                Array.from(categoriesSelect.selectedOptions).forEach(option => {
+                    const price = parseFloat(option.dataset.price) || 0;
+                    if (option.parentElement.label === 'Services') {
+                        servicesBill += price;
+                    } else {
+                        addonsBill += price;
+                    }
+                });
+
+                // Calculate for products
+                Array.from(productsSelect.selectedOptions).forEach(option => {
+                    const price = parseFloat(option.dataset.price) || 0;
+                    addonsBill += price;
+                });
+
+                addonsBillInput.value = addonsBill.toFixed(2);
+                servicesBillInput.value = servicesBill.toFixed(2);
+            }
+
+            categoriesSelect.addEventListener('change', calculateBills);
+            productsSelect.addEventListener('change', calculateBills);
+        });
+    </script>
+
+
+
+    <script>
+        document.getElementById('add-occasion').addEventListener('click', function (event) {
+            event.preventDefault();
+            var form = document.getElementById('occasion-form');
+            if (form.style.display === 'none' || form.style.display === '') {
+                form.style.display = 'block';
+            } else {
+                form.style.display = 'none';
+            }
+        });
+    </script>
+
+
+
+    <script>
+        document.getElementById('createPageForm').addEventListener('submit', async (e) => {
+            console.log('Page created successfully');
+            //   e.preventDefault();
+            const formData = new FormData(e.target);
+            const response = await fetch('/create-page', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(Object.fromEntries(formData)),
+            });
+            const result = await response.json();
+            if (result.success) {
+                alert(`Page created successfully! You can view it at: ${result.url}`);
+            } else {
+                alert(`Error: ${result.message}`);
+            }
+        });
+    </script>
+
+
+    <script>
+        const addItemForm = document.getElementById('addItemForm');
+        const itemList = document.getElementById('itemList');
+
+        async function fetchMenuItems() {
+            const response = await fetch('/api/menu-items');
+            const items = await response.json();
+            itemList.innerHTML = '';
+            items.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = `${item.name} - ${item.link} (${item.category})`;
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.onclick = () => deleteItem(item._id);
+                li.appendChild(deleteButton);
+                itemList.appendChild(li);
+            });
+        }
+
+        async function addItem(event) {
+            event.preventDefault();
+            const name = document.getElementById('itemName').value;
+            const link = document.getElementById('itemLink').value;
+            const category = document.getElementById('itemCategory').value;
+
+            await fetch('/api/menu-items', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, link, category })
+            });
+
+            fetchMenuItems();
+            addItemForm.reset();
+        }
+
+        async function deleteItem(id) {
+            await fetch(`/api/menu-items/${id}`, { method: 'DELETE' });
+            fetchMenuItems();
+        }
+
+        addItemForm.addEventListener('submit', addItem);
+        fetchMenuItems();
+    </script>
+    <script>
+        document.getElementById('add-banner').addEventListener('click', function (event) {
+            event.preventDefault();
+            var form = document.getElementById('banner-form');
+            if (form.style.display === 'none' || form.style.display === '') {
+                form.style.display = 'flex';
+            } else {
+                form.style.display = 'none';
+            }
+        });
+    </script>
+    <script>
+        document.getElementById('manage-category').addEventListener('click', function (event) {
+            event.preventDefault();
+            var form = document.getElementById('show-category');
+            if (form.style.display === 'none' || form.style.display === '') {
+                form.style.display = 'block';
+            } else {
+                form.style.display = 'none';
+            }
+        });
+    </script>
+    <script>
+        document.getElementById('new-cat').addEventListener('click', function (event) {
+            event.preventDefault();
+            var form = document.getElementById('show-new-cat');
+            if (form.style.display === 'none' || form.style.display === '') {
+                form.style.display = 'block';
+            } else {
+                form.style.display = 'none';
+            }
+        });
+    </script>
+    <script>
+        document.getElementById('manage-prod').addEventListener('click', function (event) {
+            event.preventDefault();
+            var form = document.getElementById('show-prod');
+            if (form.style.display === 'none' || form.style.display === '') {
+                form.style.display = 'block';
+            } else {
+                form.style.display = 'none';
+            }
+        });
+
+        document.getElementById('new-product').addEventListener('click', function (event) {
+            event.preventDefault();
+            var form = document.getElementById('new-product-form');
+            if (form.style.display === 'none' || form.style.display === '') {
+                form.style.display = 'block';
+            } else {
+                form.style.display = 'none';
+            }
+        });
+    </script>
+    <script>
+        function hideAllSections() {
+            document.querySelector('.dashboard-section').style.display = 'none';
+            document.querySelector('.banner-section').style.display = 'none';
+            document.querySelector('.add-ons-section').style.display = 'none';
+            document.querySelector('.party-by-theme').style.display = 'none';
+            document.querySelector('.occasion-section').style.display = 'none';
+            // document.querySelector('.newpgfrm').style.display = 'none';
+            document.querySelector('.booking-section').style.display = 'none';
+        }
+
+        // Initially show only the dashboard section
+        document.addEventListener('DOMContentLoaded', function () {
+            hideAllSections();
+            document.querySelector('.dashboard-section').style.display = 'block';
+        });
+
+        document.getElementById('show1').addEventListener('click', function () {
+            hideAllSections();
+            document.querySelector('.dashboard-section').style.display = 'block';
+        });
+
+        document.getElementById('show2').addEventListener('click', function () {
+            hideAllSections();
+            document.querySelector('.banner-section').style.display = 'block';
+        });
+
+        document.getElementById('show3').addEventListener('click', function () {
+            hideAllSections();
+            document.querySelector('.add-ons-section').style.display = 'block';
+        });
+
+        document.getElementById('show4').addEventListener('click', function () {
+            hideAllSections();
+            document.querySelector('.party-by-theme').style.display = 'block';
+        });
+
+        document.getElementById('show5').addEventListener('click', function () {
+            hideAllSections();
+            document.querySelector('.occasion-section').style.display = 'block';
+        });
+
+        // document.getElementById('show6').addEventListener('click', function() {
+        //     hideAllSections();
+        //     document.querySelector('.newpgfrm').style.display = 'block';
+        // });
+
+        document.getElementById('show7').addEventListener('click', function () {
+            hideAllSections();
+            document.querySelector('.booking-section').style.display = 'block';
+        });
+    </script>
+    <script>
+        const menuItems = document.querySelectorAll('.sidebar-menu li');
+
+        menuItems.forEach(item => {
+            item.addEventListener('click', () => {
+                menuItems.forEach(item => item.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+
+    </script>
+</body>
+
+</html>
