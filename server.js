@@ -264,6 +264,18 @@ app.get("/refund", async (req, res) => {
 app.get("/book-now", async (req, res) => {
   res.redirect("/booking")
 })
+app.get("/party-hall", async (req, res) => {
+  res.render("party-hall")
+})
+app.get("/private-theater", async (req, res) => {
+  res.render("private-theater")
+})
+app.get("/screening", async (req, res) => {
+  res.render("screening")
+})
+app.get("/love-theme", async (req, res) => {
+  res.render("love-theme")
+})
 
 app.get('/:pageName', async (req, res, next) => {
   const pageName = req.params.pageName;
