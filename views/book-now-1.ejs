@@ -2,6 +2,7 @@
 
 <style>
     .top-brands-in{
+      padding-bottom: 5vw;
       display: flex;
       /* position: relative; */
       flex-wrap: wrap;
@@ -23,7 +24,7 @@
     margin-bottom: 20px;
   }
   .top-brands-in li{
-    width: 22%;
+    width: 17vw;
     display: grid;
     justify-content: center;
   }
@@ -34,6 +35,11 @@
     bottom: 0%;
     left: 31%;
 }
+.top-brands-in li {
+    width: 25vw;
+    display: grid;
+    justify-content: center;
+}
   }
 @media screen and (max-width: 768px){
   .top-brands-in .ras {
@@ -41,14 +47,22 @@
     bottom: 0%;
     left: 25%;
 }
+.top-brands-in li {
+        width: 28vw !important;
+        display: grid;
+        justify-content: center;
+    }
   }
   @media screen and (max-width: 600px){
-    .top-brands-in li{
-      width: 80% !important;
+    .top-brands-in{
+      padding-bottom: 8vw;
+    }
+    .top-brands-in li {
+        width: 80vw !important;
     }
     .top-brands-in .ras {
         position: absolute;
-        bottom: -2%;
+        bottom: 0%;
         left: 9%;
         gap: 1rem;
     }

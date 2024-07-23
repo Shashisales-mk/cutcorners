@@ -1,0 +1,34 @@
+[
+{
+  "name": "Birthday",
+  "imageUrl": "/assets/img/birthday.png",
+  "popular": false,
+  "__v": 0
+},
+{
+  "name": "Anniversary",
+  "imageUrl": "/assets/img/anniversary.png",
+  "popular": false,
+  "__v": 0
+},
+{
+  "name": "Bride/Groom to be",
+  "imageUrl": "/assets/img/bride.png",
+  "popular": false,
+  "__v": 0
+},
+{
+  "name": "Farewell",
+  "imageUrl": "/assets/img/farewell.png",
+  "popular": false,
+  "__v": 0
+},
+{
+  "name": "Baby Shower",
+  "imageUrl": "/assets/img/baby.png",
+  "popular": false,
+  "__v": 0
+}
+
+
+]
