@@ -1,4 +1,3 @@
-
 <% layout("/layouts/boilerplate") %>
 
 <style>
@@ -13,12 +12,46 @@
       position: absolute;
       bottom: 0%;
       left: 34%;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
     }
     ul.top-brands {
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 20px;
+  }
+  .top-brands-in li{
+    width: 22%;
+    display: grid;
+    justify-content: center;
+  }
+  
+@media screen and (max-width: 1024px){
+  .top-brands-in .ras {
+    position: absolute;
+    bottom: 0%;
+    left: 31%;
+}
+  }
+@media screen and (max-width: 768px){
+  .top-brands-in .ras {
+    position: absolute;
+    bottom: 0%;
+    left: 25%;
+}
+  }
+  @media screen and (max-width: 600px){
+    .top-brands-in li{
+      width: 80% !important;
+    }
+    .top-brands-in .ras {
+        position: absolute;
+        bottom: -2%;
+        left: 9%;
+        gap: 1rem;
+    }
   }
 </style>
 
@@ -50,19 +83,17 @@
           <ul class="top-brands mb-0">
             <form class="top-brands-in" action="/booking/select-occasion" method="POST">
               <% occasions.forEach(occasion => { %>
-                <li style="width: 22%;display: grid;justify-content: center;">
+                <li>
                   <img style="height: 170px;width: 170px;" src="<%= occasion.imageUrl %>" alt="<%= occasion.name %>">
                   <p align="center"><span style="color:red"><b><%= occasion.name %></b></span></p>
                   <input style="display: flex;justify-content: center;" type="radio" name="occasionId" value="<%= occasion._id %>">
-                  <input type="hidden" name="occasionName" value="<%= occasion.name %>">
                 </li>
                   <% }); %>
-                  <div class="ras" style="display: flex;justify-content: center;gap: 2rem;">
+                  <div class="ras">
                     <a href="/book-now" class="btn"><span>PREVIOUS</span></a>
                     <button type="submit" class="btn"><span>NEXT</span></button>
                   </div>
             </form>
-           
             
           </ul>
         </div>
