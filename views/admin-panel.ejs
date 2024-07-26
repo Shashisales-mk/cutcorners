@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,39 +16,47 @@
             display: block;
             margin: 0;
         }
-        header{
+
+        header {
             z-index: 1;
             position: fixed;
             background: #672b83;
             width: 100%;
         }
+
         header ul {
             margin: 2vw 3vw;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        header li{
+
+        header li {
             list-style: none;
         }
-        .jad{
+
+        .jad {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        .dfac{
+
+        .dfac {
             display: flex;
             align-items: center;
         }
-        .hmp{
+
+        .hmp {
             background: #d7e0e8;
             margin: -3vw -3vw 0 -3vw;
             padding: 1vw 3vw;
         }
-        .admin-container{
+
+        .admin-container {
             display: flex;
         }
-        .sidebar-menu{
+
+        .sidebar-menu {
             font-size: 1rem;
             font-family: Arial, Helvetica, sans-serif;
             height: 100vh;
@@ -58,42 +67,63 @@
             background: rgb(0, 0, 0);
             color: rgb(255, 255, 255);
         }
-        .sidebar-menu ul{
+
+        .sidebar-menu ul {
             margin-top: 10vw;
             padding: 0;
         }
-        .sidebar-menu li{
+
+        .sidebar-menu li {
             border-bottom: 1px solid;
             list-style: none;
             padding: 1.4vw 1vw;
             text-align: center;
         }
-        .sidebar-menu li:hover{
+
+        .sidebar-menu li:hover {
             background: rgb(186, 147, 62);
             cursor: pointer;
         }
+
         .sidebar-menu li.active {
             background-color: rgb(186, 147, 62);
         }
-        .container-right{
+
+        .container-right {
             margin-top: 10vw;
             width: 90%;
             margin-left: 12vw;
         }
-        .cont-in{
+
+        .cont-in {
             padding: 1vw 3vw;
             margin-right: 2vw;
             margin-bottom: 5vw;
             background: #b4becc38;
             font-family: sans-serif;
         }
-        .container-right h2{
+
+        .container-right h2 {
             text-decoration: underline;
         }
-        .banner-section{
+
+        .banner-section {
             margin-top: 2vw;
         }
-        .banner-section a, .add-ons-section a, #addItemForm button,#itemList button, #banner-form input, #banner-form button, #edit-banner input, #edit-banner button, #show-new-cat button, .cont-in button, #occasion-list button, #add-occasion, #occasion-form button{
+
+        .banner-section a,
+        .add-ons-section a,
+        #addItemForm button,
+        #itemList button,
+        #banner-form input,
+        #banner-form button,
+        #edit-banner input,
+        #edit-banner button,
+        #show-new-cat button,
+        .cont-in button,
+        #occasion-list button,
+        #add-occasion,
+        #occasion-form button {
             padding: 0.6vw 2vw;
             background: #672b83;
             color: white;
@@ -103,44 +133,68 @@
             border-radius: 6px;
             border: 0;
         }
-        .banner-section a:hover, .add-ons-section a:hover, #addItemForm button:hover,#itemList button:hover, #banner-form input:hover, #banner-form button:hover, .cont-in button:hover, #occasion-list button:hover, #add-occasion:hover, #occasion-form button:hover{
+
+        .banner-section a:hover,
+        .add-ons-section a:hover,
+        #addItemForm button:hover,
+        #itemList button:hover,
+        #banner-form input:hover,
+        #banner-form button:hover,
+        .cont-in button:hover,
+        #occasion-list button:hover,
+        #add-occasion:hover,
+        #occasion-form button:hover {
             cursor: pointer;
         }
-        #banner-form input{
+
+        #banner-form input {
             font-size: 0.9vw;
         }
-        .banner-section ul, #show-new-cat ul{
+
+        .banner-section ul,
+        #show-new-cat ul {
             display: flex;
             flex-wrap: wrap;
             justify-content: flex-start;
             gap: 5vw;
         }
-        #show-new-cat ul{
+
+        #show-new-cat ul {
             display: grid;
             gap: 2vw;
         }
-        #show-new-cat li{
+
+        #show-new-cat li {
             display: flex;
             align-items: center;
             gap: 0.5rem;
             font-size: 1.5vw;
             font-weight: 700;
         }
-        .banner-section li{
+
+        .banner-section li {
             display: flex;
             gap: 5vw;
             align-items: center;
         }
-        .banner-section img{
+
+        .banner-section img {
             height: 10vw;
             width: 23vw;
             border-radius: 5px;
         }
-        .banner-section p{
+
+        .banner-section p {
             display: grid;
             gap: 2vw;
         }
-        #addItemForm input, #show-new-cat input, .cont-in input, #occasion-form input, .newpgfrm textarea{
+
+        #addItemForm input,
+        #show-new-cat input,
+        .cont-in input,
+        #occasion-form input,
+        .newpgfrm textarea,
+        .theme-section textarea {
             padding: 0.6vw 2vw;
             font-size: 1.3vw;
             border: 0px solid #000;
@@ -148,101 +202,131 @@
             background: #a7b8bf6e;
             outline: none;
         }
-        select{
+
+        select {
             padding: 0.5vw 1vw;
             font-size: 1.2vw;
             background: black;
             color: white;
         }
-        #itemList{
+
+        #itemList {
             display: grid;
             gap: 1rem;
         }
-        #itemList li{
+
+        #itemList li {
             width: 40%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             font-size: 1.3vw;
         }
+
         #banner-form {
             margin-top: 1rem;
             gap: 1rem;
         }
-        #edit-banner{
+
+        #edit-banner {
             display: flex;
             align-items: center;
             gap: 2rem;
         }
-        .add-ons-section, .party-by-theme {
+
+        .add-ons-section,
+        .party-by-theme {
             display: none;
         }
-        #show-edit-event, #show-delete-event{
+
+        #show-edit-event,
+        #show-delete-event {
             display: none;
         }
-        .occasion-section img{
+
+        .occasion-section img {
             height: 5vw;
             width: 5vw;
             border-radius: 5px;
         }
-        .m2 li, #occasion-list li{
+
+        .m2 li,
+        #occasion-list li {
             font-size: 1.4vw;
             display: flex;
             align-items: center;
             gap: 1rem;
         }
-        .edit-addon input{
+
+        .edit-addon input {
             width: 10vw;
         }
-        .ad input, .ad select{
+
+        .ad input,
+        .ad select {
             width: 10vw;
         }
-        .newpgfrm form{
+
+        .newpgfrm form {
             display: grid;
             width: 70%;
         }
-        .newpgfrm label, .newpgfrm button{
+
+        .newpgfrm label,
+        .newpgfrm button {
             margin-top: 2vw;
         }
-        .newpgfrm button{
+
+        .newpgfrm button {
             width: 30%;
         }
-        .newpgfrm button:hover{
+
+        .newpgfrm button:hover {
             cursor: pointer;
         }
-        .booking-section input{
+
+        .booking-section input {
             width: 7vw;
         }
-        li{
+
+        li {
             list-style: none;
         }
-        ul{
+
+        ul {
             padding: 0;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
         }
-        th, td {
+
+        th,
+        td {
             border: 2px solid #ddd;
             padding: 8px;
             text-align: center;
         }
+
         th {
             background-color: #f2f2f2;
             text-align: center;
         }
-        .order-form form option:hover{
+
+        .order-form form option:hover {
             background: blue;
         }
-        .order-form form div{
+
+        .order-form form div {
             background: #dae7e7c4;
             padding: 1vw;
             border-radius: 1vw;
             display: flex;
             gap: 1rem;
         }
-        .order-form ul li{
+
+        .order-form ul li {
             margin-top: 1vw;
             display: flex;
             align-items: center;
@@ -250,14 +334,46 @@
             background: #bcc9cf;
             padding: 0.5vw;
         }
-        .order-form form div:nth-child(4){
+
+        .order-form form div:nth-child(4) {
             margin-top: 2rem;
         }
+
         /* .order-form form button{
             width: 100%;
         } */
-        .order-form form div:nth-child(6){
+        .order-form form div:nth-child(6) {
             margin-bottom: 1rem;
+        }
+        .theme-section form{
+            display: grid;
+            padding: 0 10vw;
+            gap: 1vw;
+            margin-top: 2vw;
+        }
+        .theme-section form div{
+            display: grid;
+        }
+        .theme-section button{
+            width: 40%;
+        }
+        .theme-section textarea{
+            height: 8vw;
+        }
+        .logbt a{
+            color: #faf9f9;
+            text-decoration: none;
+            /* border: 1px solid #f2f2f2; */
+            border-radius: 3px;
+            padding: 0.6vw 2vw;
+            background: rgb(215 173 82);
+        }
+        .logbt a:hover{
+            color: #e9dede;
+        }
+        .booking-section form{
+            margin-top: 2vw;
+            
         }
     </style>
 </head>
@@ -278,7 +394,7 @@
             <ul>
                 <li><a href="/"><img alt="logo" height="40" width="60" style="height: 5vw; width: 10vw;"
                             src="/assets/img/logo1.png"></a></li>
-                <li></li>
+                <li class="logbt"><a href="/logout">Logout</a></li>
             </ul>
         </header>
         <div class="admin-container">
@@ -291,6 +407,7 @@
                     <li id="show5">Manage Occasions</li>
                     <!-- <li id="show6">Pages</li> -->
                     <li id="show7">Booking</li>
+                    <li id="show8">Theme Section</li>
                 </ul>
             </div>
             <div class="container-right">
@@ -772,6 +889,46 @@
                     </div>
 
 
+                    <div class="theme-section" style="margin-top: 2vw;">
+                        <h2 class="hmp">Create New Theme Section</h2>
+                        <form action="/section/create-section" method="POST" enctype="multipart/form-data">
+                            <div>
+                                <label for="menuItem">Theme:</label>
+                                <select name="menuItem" id="menuItem" required>
+                                    <% menuItems.filter(item=> item.category === 'theme').forEach(item => { %>
+                                        <option value="<%= item._id %>">
+                                            <%= item.name %>
+                                        </option>
+                                        <% }) %>
+                                </select>
+                            </div>
+                            <div>
+                                <!-- <label for="title">Title:</label> -->
+                                <input type="text" name="title" id="title" placeholder="Title" required>
+                            </div>
+                            <div>
+                                <!-- <label for="readyTime">Ready Time (in hours):</label> -->
+                                <input type="number" name="readyTime" id="readyTime" placeholder="Ready Time (in hours)" step="0.5" min="0" required>
+                            </div>
+                            <div>
+                                <!-- <label for="description">Description:</label> -->
+                                <textarea name="description" id="description" placeholder="Description"></textarea>
+                            </div>
+                            <div>
+                                <!-- <label for="price">Price:</label> -->
+                                <input type="number" name="price" id="price" placeholder="Price" required>
+                            </div>
+                            <div>
+                                <!-- <label for="features">Features (one per line):</label> -->
+                                <textarea name="features" id="features" placeholder="Features (one per line)"></textarea>
+                            </div>
+                            <div>
+                                <label for="themeImages">Images (select multiple (maximum 7 images can be selected)):</label>
+                                <input type="file" name="themeImages" id="themeImages" multiple accept="image/*" required>
+                            </div>
+                            <button type="submit">Create Theme Section</button>
+                        </form>
+                    </div>
 
 
 
@@ -1051,6 +1208,7 @@
             document.querySelector('.occasion-section').style.display = 'none';
             // document.querySelector('.newpgfrm').style.display = 'none';
             document.querySelector('.booking-section').style.display = 'none';
+            document.querySelector('.theme-section').style.display = 'none';
         }
 
         // Initially show only the dashboard section
@@ -1092,6 +1250,10 @@
         document.getElementById('show7').addEventListener('click', function () {
             hideAllSections();
             document.querySelector('.booking-section').style.display = 'block';
+        });
+        document.getElementById('show8').addEventListener('click', function () {
+            hideAllSections();
+            document.querySelector('.theme-section').style.display = 'block';
         });
     </script>
     <script>

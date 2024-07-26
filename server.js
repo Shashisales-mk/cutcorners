@@ -13,6 +13,7 @@ const MenuItem = require('./models/Menuitem');
 const Occasion = require('./models/Occasion');
 const Order = require('./models/Order');
 const Slot = require('./models/Slot');
+const Section = require('./models/Section');
 const categoryRoutes = require('./routes/categories');
 const productRoutes = require('./routes/products');
 const fs = require('fs').promises;
@@ -20,6 +21,7 @@ const occasionRoutes = require('./routes/occasions');
 const adminRoutes = require('./routes/orders'); // Add this line
 const bookingRoutes = require('./routes/bookingRoutes');
 const slotsroute = require('./routes/slots');
+const sectionRoutes = require('./routes/sections');
 const session = require('express-session');
 const flash = require('connect-flash');
 const User = require("./models/User");
@@ -144,6 +146,7 @@ app.use('/order', adminRoutes); // Add this line instead
 app.use('/booking', bookingRoutes);
 app.use('/slot', slotsroute);
 
+app.use('/section', sectionRoutes);
 
 
 const MERCHANT_KEY = process.env.PAYU_MERCHANT_KEY;
@@ -193,7 +196,7 @@ app.get("/admin-panel",isAdmin ,async (req, res) => {
     const slots = await Slot.find();
     const availableSlots = await Slot.find({ isAvailable: true });
     const menuItems = await MenuItem.find();
-    // console.log("Available slots:", availableSlots); 
+    
 
     res.render('admin-panel', {
       search: search || '',
@@ -274,8 +277,45 @@ app.get("/screening", async (req, res) => {
   res.render("screening")
 })
 app.get("/love-theme", async (req, res) => {
-  res.render("love-theme")
-})
+  try {
+    const section = await Section.findOne({ name: "Love Theme" });
+    
+    if (!section) {
+      return res.status(404).send('Love Theme section not found');
+    }
+
+    res.render("love-theme", { section });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
+  }
+});
+
+
+
+// server.js or routes file
+app.get('/section/:id', async (req, res) => {
+  try {
+    const section = await Section.findById(req.params.id).populate('menuItem');
+    if (!section) {
+      return res.status(404).send('Section not found');
+    }
+    res.render('section-template', { section });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
+  }
+});
+
+
+
+
+
+
+
+
+
+
 
 app.get('/:pageName', async (req, res, next) => {
   const pageName = req.params.pageName;

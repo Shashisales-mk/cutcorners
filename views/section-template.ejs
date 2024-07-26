@@ -1,0 +1,51 @@
+<% layout("/layouts/boilerplate") %>
+
+<section class="gap no-top" style="background-color: #f7f7f7;">
+  <div class="container">
+    <div class="row">
+      <div class="occasion-details">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="pd-gallery two">
+              <div class="pd-main-img">
+                <img id="NZoomImg" alt="theme" src="<%= section.images[0] %>">
+              </div>
+              <ul class="pd-imgs">
+                <% section.images.forEach((image, index) => { %>
+                  <li class="li-pd-imgs <%= index === 0 ? 'nav-active' : '' %>">
+                    <a href="JavaScript:void(0)">
+                      <img alt="theme" src="<%= image %>">
+                    </a>
+                  </li>
+                <% }) %>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="theme-text party-balloons">
+              <h6>Ready Time <span>– <%= section.readyTime %> Hours</span></h6>
+              <h3><%= section.title %></h3>
+              <div class="content">
+                <p align="justify"><%= section.description %></p>
+                <div class="party-balloons">
+                  <ul>
+                    <% section.features.forEach(feature => { %>
+                      <li><img alt="chak" src="/assets/img/chak.png"><%= feature %></li>
+                    <% }) %>
+                  </ul>
+                </div>
+              </div>
+              <div class="d-flex align-items-center">
+                <div class="d-flex align-items-baseline">
+                  <h4>₹ <%= section.price %>/-</h4>
+                  <span>(Add On's will be charged separately)</span>
+                </div>
+              </div><br>
+              <a href="#" class="btn"><span>Book Now</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
