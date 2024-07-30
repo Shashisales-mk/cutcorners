@@ -5,6 +5,7 @@ const multer = require('multer');
 const path = require('path');
 const MenuItem = require('../models/Menuitem');
 const Section = require('../models/Section');
+const Page = require('../models/Page');
 
 
 // Set up multer for image uploads
@@ -24,7 +25,7 @@ const upload = multer({ storage: storage });
 // routes/admin.js
 router.post('/create-section', upload.array('themeImages', 7), async (req, res) => {
   try {
-    const { menuItem, title, readyTime, description, price, features } = req.body;
+    const {page,  menuItem, title, readyTime, description, price, features } = req.body;
     
     // Fetch the menuItem to get its name
     const themeMenuItem = await MenuItem.findById(menuItem);
@@ -33,6 +34,7 @@ router.post('/create-section', upload.array('themeImages', 7), async (req, res) 
     }
 
     const newSection = new Section({
+      page: page,
       name: themeMenuItem.name, // Set the name to be the same as the theme name
       menuItem,
       title,
@@ -44,6 +46,8 @@ router.post('/create-section', upload.array('themeImages', 7), async (req, res) 
     });
 
     const savedSection = await newSection.save();
+     // Add the section to the page's sections array
+     await Page.findByIdAndUpdate(page, { $push: { sections: savedSection._id } });
     res.redirect("/admin-panel");
   } catch (error) {
     console.error(error);

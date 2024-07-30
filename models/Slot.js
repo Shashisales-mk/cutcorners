@@ -4,7 +4,8 @@ const slotSchema = new mongoose.Schema({
   
   time: String,
   type: { type: String, required: true, enum: ['pt', 'ph'] },
-  isAvailable: { type: Boolean, default: true }
+  isAvailable: { type: Boolean, default: true },
+  availableFrom: { type: Date }
 });
 
 module.exports = mongoose.model('Slot', slotSchema);

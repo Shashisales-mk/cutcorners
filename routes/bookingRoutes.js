@@ -5,6 +5,7 @@ const Category = require('../models/Category');
 const Product = require('../models/Product');
 const Booking = require('../models/Booking');
 const TimeSlot = require('../models/Slot'); 
+const cron = require('node-cron');
 
 // Step 1: Select date and screen
 router.get('/', async (req, res) => {
@@ -133,9 +134,7 @@ router.post('/final', async (req, res) => {
   try {
     console.log('Received booking data:', req.body);
     
-    const { customerName, customerEmail, customerPhone, totalAmount} = req.body;
-    
-    
+    const { customerName, customerEmail, customerPhone, totalAmount } = req.body;
     
     // Parse billing details with default values
     const hallRent = parseFloat(req.body.hallRent) || 0;
@@ -144,6 +143,7 @@ router.post('/final', async (req, res) => {
     const servicesBill = parseFloat(req.body.servicesBill) || 0;
     
     console.log('Billing details received:', { hallRent, additionalPersonCharge, addonsBill, servicesBill });
+    
     // Retrieve the date from the session if it's not in the form data
     const date = req.body.date || req.session.bookingData?.date;
     const timeSlot = req.body.timeSlot || req.session.bookingData?.timeSlot;
@@ -194,12 +194,49 @@ router.post('/final', async (req, res) => {
     });
     
     await newBooking.save();
+
+    // Update slot availability
+    const availableFrom = new Date(parsedDate);
+    availableFrom.setDate(availableFrom.getDate() + 1); // Set to next day
+
+    await TimeSlot.findOneAndUpdate(
+      { time: timeSlot, type: screen.startsWith('private') ? 'pt' : 'ph' },
+      { 
+        isAvailable: false,
+        availableFrom: availableFrom
+      }
+    );
+
     res.redirect('/');
   } catch (error) {
     console.error('Booking error:', error);
     res.status(400).render('error', { message: error.message });
   }
 });
+
+// Function to update slot availability
+async function updateSlotAvailability() {
+  const now = new Date();
+  try {
+    const slotsToUpdate = await TimeSlot.find({
+      isAvailable: false,
+      availableFrom: { $lte: now }
+    });
+
+    for (let slot of slotsToUpdate) {
+      slot.isAvailable = true;
+      slot.availableFrom = null;
+      await slot.save();
+    }
+
+    console.log(`Updated availability for ${slotsToUpdate.length} slots.`);
+  } catch (error) {
+    console.error('Error updating slot availability:', error);
+  }
+}
+
+// Schedule the update function to run daily at midnight
+cron.schedule('0 0 * * *', updateSlotAvailability);
 
 
 module.exports = router;

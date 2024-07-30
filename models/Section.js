@@ -2,6 +2,7 @@
 const mongoose = require('mongoose');
 
 const sectionSchema = new mongoose.Schema({
+  page: { type: mongoose.Schema.Types.ObjectId, ref: 'Page' },
   name: { type: String, required: true },
   menuItem: { type: mongoose.Schema.Types.ObjectId, ref: 'MenuItem', required: true },
   title: String,

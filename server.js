@@ -25,6 +25,8 @@ const sectionRoutes = require('./routes/sections');
 const session = require('express-session');
 const flash = require('connect-flash');
 const User = require("./models/User");
+const Page = require("./models/Page");
+const Booking = require('./models/Booking');
 const passport = require('./config/passport');
 const Templatesender = require("./utils/mailSender");
 const jsSHA = require('jssha');
@@ -160,7 +162,7 @@ const PAYU_BASE_URL = 'https://test.payu.in/_payment';
 
 
 
-app.get("/admin-panel",isAdmin ,async (req, res) => {
+app.get("/admin-panel", isAdmin , async (req, res) => {
   try {
     const { search, sortBy } = req.query;
 
@@ -196,11 +198,13 @@ app.get("/admin-panel",isAdmin ,async (req, res) => {
     const slots = await Slot.find();
     const availableSlots = await Slot.find({ isAvailable: true });
     const menuItems = await MenuItem.find();
+    const pages = await Page.find().sort({ createdAt: -1 });
+    const bookings = await Booking.find().sort({createdAt: -1})
     
 
     res.render('admin-panel', {
       search: search || '',
-      sortBy: sortBy || 'dateDesc', banners, products, categories, occasions, orders, slots, availableSlots, menuItems
+      sortBy: sortBy || 'dateDesc', bookings, banners, products, categories, occasions, orders, slots, availableSlots, menuItems, pages
     });
   } catch (err) {
     console.error(err);
@@ -280,9 +284,9 @@ app.get("/love-theme", async (req, res) => {
   try {
     const section = await Section.findOne({ name: "Love Theme" });
     
-    if (!section) {
-      return res.status(404).send('Love Theme section not found');
-    }
+    // if (!section) {
+    //   return res.status(404).send('Love Theme section not found');
+    // }
 
     res.render("love-theme", { section });
   } catch (error) {
@@ -318,52 +322,110 @@ app.get('/section/:id', async (req, res) => {
 
 
 app.get('/:pageName', async (req, res, next) => {
-  const pageName = req.params.pageName;
-  const filePath = path.join(__dirname, 'views', `${pageName}.ejs`);
-
   try {
-    await fs.access(filePath);
-    res.render(pageName);
+    const pageName = req.params.pageName;
+    
+    if (pageName === 'favicon.ico') {
+      return next();
+    }
+    
+    const page = await Page.findOne({ name: pageName }).populate('theme').populate('sections');
+    console.log(page, "page");
+    
+    if (!page) {
+      console.log(`Page not found: ${pageName}`);
+      return next();
+    }
+    
+    res.render('page-template', {
+      page,
+      sections: page.sections || [], // Pass the sections here
+      pageTitle: page.title,
+      pageHeading: page.title,
+      pageContent: page.content
+    });
   } catch (error) {
-    next(); // Pass to the next middleware if the file doesn't exist
+    console.error('Error in /:pageName route:', error);
+    res.status(500).send('Internal Server Error');
   }
 });
 
-
 app.post('/create-page', async (req, res) => {
   try {
-    const { pageName, pageTitle, pageHeading, pageContent } = req.body;
+    const { pageName, pageTitle, pageHeading, pageContent, themeId } = req.body;
 
-    // Sanitize the page name
     const sanitizedPageName = pageName.replace(/[^a-z0-9]/gi, '_').toLowerCase();
 
-    // Use the correct path including 'cut corners'
+    // Create the page
+    const newPage = new Page({
+      name: sanitizedPageName,
+      title: pageTitle,
+      url: `/${sanitizedPageName}`,
+      theme: themeId,
+      content: pageContent,
+      sections: []
+    });
+
+    const savedPage = await newPage.save();
+
+    // Read template files
     const templatePath = path.resolve(__dirname, 'views', 'page-template.ejs');
-    console.log('Template path:', templatePath); // For debugging
+    const layoutPath = path.resolve(__dirname, 'views', 'layouts', 'boilerplate.ejs');
+    const navbarPath = path.resolve(__dirname, 'views', 'includes', 'navbar.ejs');
+    const footerPath = path.resolve(__dirname, 'views', 'includes', 'footer.ejs');
 
-    // Check if the file exists before trying to read it
-    await fs.access(templatePath);
+    const [template, layoutContent, navbarContent, footerContent] = await Promise.all([
+      fs.readFile(templatePath, 'utf-8'),
+      fs.readFile(layoutPath, 'utf-8'),
+      fs.readFile(navbarPath, 'utf-8'),
+      fs.readFile(footerPath, 'utf-8')
+    ]);
 
-    const template = await fs.readFile(templatePath, 'utf-8');
+    // Create a mock Express response object
+    const mockRes = {
+      render: async (view, options) => {
+        const pageContent = await ejs.render(template, {
+          ...options,
+          layout: (file) => layoutContent,
+          include: (file) => {
+            if (file === '../includes/navbar') return navbarContent;
+            if (file === '../includes/footer') return footerContent;
+            throw new Error(`Include file not found: ${file}`);
+          },
+          body: options.body || ''
+        }, { async: true });
 
-    // Render the template with the provided data
-    const renderedPage = ejs.render(template, {
+        return ejs.render(layoutContent, { 
+          body: pageContent,
+          include: (file) => {
+            if (file === '../includes/navbar') return navbarContent;
+            if (file === '../includes/footer') return footerContent;
+            throw new Error(`Include file not found: ${file}`);
+          }
+        }, { async: true });
+      }
+    };
+
+    // Render the page content
+    const renderedPage = await mockRes.render('page-template', {
+      page: savedPage,
+      sections: [],
       pageTitle,
       pageHeading,
       pageContent
     });
 
-    // Create the file path for the new page
     const newPagePath = path.resolve(__dirname, 'views', `${sanitizedPageName}.ejs`);
-
-    // Write the rendered page to a file
     await fs.writeFile(newPagePath, renderedPage);
+
+    const theme = await MenuItem.findById(themeId);
 
     res.json({
       success: true,
       message: 'Page created successfully',
       pageName: sanitizedPageName,
-      url: `/${sanitizedPageName}`
+      url: `/${sanitizedPageName}`,
+      themeName: theme.name
     });
   } catch (error) {
     console.error('Error creating page:', error);
@@ -379,16 +441,35 @@ app.post('/create-page', async (req, res) => {
 
 app.get('/page-list', async (req, res) => {
   try {
-    const viewsPath = path.join(__dirname, '..', 'views');
-    const files = await fs.readdir(viewsPath);
-    const pages = files.filter(file => file.endsWith('.ejs') && file !== 'page-template.ejs');
+    const pages = await Page.find().sort({ createdAt: -1 });
     res.json({ success: true, pages });
   } catch (error) {
     console.error('Error listing pages:', error);
     res.status(500).json({ success: false, message: 'Error listing pages' });
   }
+
 });
 
+app.delete('/delete-page/:id', isAdmin, async (req, res) => {
+  try {
+    const page = await Page.findById(req.params.id);
+    if (!page) {
+      return res.status(404).json({ success: false, message: 'Page not found' });
+    }
+
+    // Delete the EJS file
+    const filePath = path.resolve(__dirname, 'views', `${page.name}.ejs`);
+    await fs.unlink(filePath);
+
+    // Remove from database
+    await Page.findByIdAndDelete(req.params.id);
+
+    res.json({ success: true, message: 'Page deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting page:', error);
+    res.status(500).json({ success: false, message: 'Error deleting page' });
+  }
+});
 
 
 
@@ -427,7 +508,7 @@ async function createDefaultAdminUsers() {
   }
 }
 // Call the function to create the default admin users
-// createDefaultAdminUsers();
+// createDefaultAdminUsers(); 
 
 
 app.get('/login', (req, res) => {

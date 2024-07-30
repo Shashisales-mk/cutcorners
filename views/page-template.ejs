@@ -1,24 +1,178 @@
-<!DOCTYPE html>
+<% layout("/layouts/boilerplate") %>
+
+<!-- <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= pageTitle %></title>
-</head>
+    <title>cutcorners</title>
+
+    <meta name="description" content="cutcorners">
+
+
+    <link rel="icon" href="/assets/img/favicon1.png">
+   
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="/css/owl.theme.default.min.css">
+  
+    <link rel="stylesheet" href="/css/jquery.fancybox.min.css">
+    
+    <link rel="stylesheet" href="/css/fontawesome.min.css">
+  
+
+   
+
+  
+    <link rel="stylesheet" href="/css/color.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+
+</head> -->
+
 <body>
-    <header>
-        <!-- Your common header content -->
-    </header>
+ 
 
-    <main>
-        <h1><%= pageHeading %></h1>
-        <div class="content">
-            <%- pageContent %>
+    <div class="banner pb-0" style="background-color: #f7f7f7 ;">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="index.html">Home</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="#">Party By Theme</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Love Theme</li>
+            </ol>
         </div>
-    </main>
+    </div>
 
-    <footer>
-        <!-- Your common footer content -->
-    </footer>
+                <% if (typeof sections !=='undefined' && sections && sections.length> 0) { %>
+                    <% sections.forEach(section=> { %>
+                        <section class="gap no-top" style="background-color: #f7f7f7 ;">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="occasion-details">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="pd-gallery two">
+                                                    <div class="pd-main-img">
+                                                        <img id="NZoomImg" alt="<%= section.title %>"
+                                                            src="<%= section.images.length > 0 ? section.images[0] : '/path/to/placeholder-image.jpg' %>">
+                                                    </div>
+                                                    <% if (section.images && section.images.length> 0) { %>
+                                                        <ul class="pd-imgs">
+                                                            <% section.images.forEach((image, index)=> { %>
+                                                                <li
+                                                                    class="li-pd-imgs <%= index === 0 ? 'nav-active' : '' %>">
+                                                                    <a href="JavaScript:void(0)">
+                                                                        <img alt="<%= section.title %>"
+                                                                            src="<%= image %>">
+                                                                    </a>
+                                                                </li>
+                                                                <% }) %>
+                                                        </ul>
+                                                        <% } %>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="theme-text party-balloons">
+                                                    <h6>Ready Time <span>– <%= section.readyTime %> Hours</span></h6>
+                                                    <h3>
+                                                        <%= section.title %>
+                                                    </h3>
+
+                                                    <div class="content">
+                                                        <p align="justify">
+                                                            <%= section.description %>
+                                                        </p>
+                                                        <% if (section.features && section.features.length> 0) { %>
+                                                            <div class="party-balloons">
+                                                                <ul>
+                                                                    <% section.features.forEach(feature=> { %>
+                                                                        <li><img alt="chak" src="/assets/img/chak.png">
+                                                                            <%= feature %>
+                                                                        </li>
+                                                                        <% }) %>
+                                                                </ul>
+                                                            </div>
+                                                            <% } %>
+                                                    </div>
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="d-flex align-items-baseline">
+                                                            <h4>₹ <%= section.price.toFixed(2) %>/-</h4>
+                                                            <span>(Add On's will be charged separately)</span>
+                                                        </div>
+                                                    </div><br>
+
+                                                    <a href="/booking" class="btn"><span>Book Now</span></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <% }) %>
+                            <% } %>
+
+
+    <section class="gap no-top">
+        <div class="container">
+            <div class="comment mt-0">
+                <h3>Similar Theme Parties</h3>
+                <div class="boder"></div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="similar-occasion">
+                        <figure>
+                            <img src="/assets/img/theme/6.png" alt="similar-occasion">
+                        </figure>
+
+                        <a href="/birthday_theme">
+                            <h4>Birthday Theme</h4>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="similar-occasion">
+                        <figure>
+                            <img src="/assets/img/theme/8.png" alt="similar-occasion">
+                        </figure>
+
+                        <a href="#">
+                            <h4>Bride/Groom Theme</h4>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="similar-occasion">
+                        <figure>
+                            <img src="/assets/img/theme/7.png" alt="similar-occasion">
+                        </figure>
+
+                        <a href="#">
+                            <h4>Baby Theme</h4>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- <script src="/js/script.js"></script>
+
+    <script src="/js/jquery-3.6.0.min.js"></script>
+  
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/owl.carousel.min.js"></script>
+   
+    <script src="/js/jquery.fancybox.min.js"></script>
+    <script src="/js/custom.js"></script> -->
 </body>
-</html>
+
+<!-- </html> -->
