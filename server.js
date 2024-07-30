@@ -354,7 +354,7 @@ app.post('/create-page', async (req, res) => {
   try {
     const { pageName, pageTitle, pageHeading, pageContent, themeId } = req.body;
 
-    const sanitizedPageName = pageName.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+    const sanitizedPageName = pageName.replace(/[^a-z0-9]/gi, '-').toLowerCase();
 
     // Create the page
     const newPage = new Page({
