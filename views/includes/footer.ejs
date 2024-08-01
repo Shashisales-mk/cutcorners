@@ -11,30 +11,7 @@
           <div class="account">
             <h5>PARTY BY THEME</h5>
             <ul>
-              <!-- <li>
-                <i class="fa-solid fa-angle-right"></i>
-                <a href="#">LOVE THEME</a>
-              </li>
-              <li>
-                <i class="fa-solid fa-angle-right"></i>
-                <a href="#">BIRTHDAY THEME</a>
-              </li>
-              <li>
-                <i class="fa-solid fa-angle-right"></i>
-                <a href="#">BRIDE/GROOM THEME</a>
-              </li>
-              <li>
-                <i class="fa-solid fa-angle-right"></i>
-                <a href="#">BABY THEME</a>
-              </li>
-              <li>
-                <i class="fa-solid fa-angle-right"></i>
-                <a href="#">LADY/WOMEN THEME</a>
-              </li>
-              <li>
-                <i class="fa-solid fa-angle-right"></i>
-                <a href="#">FAREWELL/CONGRATULATIONS THEME</a>
-              </li> -->
+           
               <% menuItems.filter(item => item.category === 'theme').forEach(theme => { %>
                 <li><i class="fa-solid fa-angle-right"></i>
                   <a href="<%= theme.link %>"><%= theme.name %></a></li>
@@ -47,26 +24,7 @@
           <div class="account">
             <h5>ADD ON'S</h5>
             <ul>
-              <!-- <li>
-                <i class="fa-solid fa-angle-right"></i>
-                <a href="#">DECORATIONS</a>
-              </li>
-              <li>
-                <i class="fa-solid fa-angle-right"></i>
-                <a href="#">CAKES</a>
-              </li>
-              <li>
-                <i class="fa-solid fa-angle-right"></i>
-                <a href="#">FOOD & BEVERAGES</a>
-              </li>
-              <li>
-                <i class="fa-solid fa-angle-right"></i>
-                <a href="#">PHOTOGRAPHY</a>
-              </li>
-              <li>
-                <i class="fa-solid fa-angle-right"></i>
-                <a href="#">PARTY PROPS</a>
-              </li> -->
+             
 
               <% categories.forEach(category => { %>
                 <li>

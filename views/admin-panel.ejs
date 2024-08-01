@@ -650,12 +650,17 @@
                         </form>
 
 
+
                         <h2>Created Pages</h2>
                         <ul id="pageList">
                             <% pages.forEach(page=> { %>
                                 <li><a href="<%= page.url %>">
                                         <%= page.title %>
                                     </a></li>
+                                    <li>
+                                        <form action="/delete-page/<%= page._id %>?_method=DELETE" method="POST">
+                                            <input type="submit" value="Delete">
+                                          </form></li>
                                 <% }) %>
                         </ul>
 
@@ -963,6 +968,19 @@
                             </div>
                             <button type="submit">Create Theme Section</button>
                         </form>
+
+                        <ul id="sectionList">
+                            <% sections.forEach(section => { %>
+                              <li>
+                                <h3><%= section.title %></h3>
+                                <p><%= section._id %></p>
+                                <form action="/section/delete-section/<%= section._id %>?_method=DELETE" method="POST">
+                                  <input type="submit" value="Delete">
+                                </form>
+                              </li>
+                            <% }) %>
+                          </ul>
+                          
                     </div>
 
 

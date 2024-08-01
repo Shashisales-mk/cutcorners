@@ -200,11 +200,12 @@ app.get("/admin-panel", isAdmin , async (req, res) => {
     const menuItems = await MenuItem.find();
     const pages = await Page.find().sort({ createdAt: -1 });
     const bookings = await Booking.find().sort({createdAt: -1})
+    const sections = await Section.find();
     
 
     res.render('admin-panel', {
       search: search || '',
-      sortBy: sortBy || 'dateDesc', bookings, banners, products, categories, occasions, orders, slots, availableSlots, menuItems, pages
+      sortBy: sortBy || 'dateDesc',sections, bookings, banners, products, categories, occasions, orders, slots, availableSlots, menuItems, pages
     });
   } catch (err) {
     console.error(err);
@@ -280,20 +281,23 @@ app.get("/private-theater", async (req, res) => {
 app.get("/screening", async (req, res) => {
   res.render("screening")
 })
-app.get("/love-theme", async (req, res) => {
-  try {
-    const section = await Section.findOne({ name: "Love Theme" });
+app.get("/testp", async (req, res) => {
+  res.render("test")
+})
+// app.get("/love-theme", async (req, res) => {
+//   try {
+//     const section = await Section.findOne({ name: "Love Theme" });
     
-    // if (!section) {
-    //   return res.status(404).send('Love Theme section not found');
-    // }
+//     // if (!section) {
+//     //   return res.status(404).send('Love Theme section not found');
+//     // }
 
-    res.render("love-theme", { section });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Server error');
-  }
-});
+//     res.render("love-theme", { section });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send('Server error');
+//   }
+// });
 
 
 
