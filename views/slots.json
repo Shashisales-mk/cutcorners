@@ -1,33 +1,50 @@
 [
-    {
-      "time": "9:30 AM to 12:30 PM",
-      "type": "pt",
-      "isAvailable": true
-    },
-    {
-      "time": "1:00 PM to 4:00 PM",
-      "type": "pt",
-      "isAvailable": true
-    },
-    {
-      "time": "4:30 PM to 7:30 PM",
-      "type": "pt",
-      "isAvailable": true
-    },
-    {
-      "time": "8:00 PM to 11:00 PM",
-      "type": "pt",
-      "isAvailable": true
-    },
-    {
-      "time": "11:00 AM to 03:00 PM",
-      "type": "ph",
-      "isAvailable": true
-    },
-    {
-      "time": "6:00 PM to 10:00 PM",
-      "type": "ph",
-      "isAvailable": true
-    }
-  ]
-  
+  {
+    "time": "9:30 AM to 12:30 PM",
+    "type": "pt",
+    "privateScreen1Available": true,
+    "privateScreen2Available": true,
+    "partyHallAvailable": true,
+    "unavailableDates": []
+  },
+  {
+    "time": "1:00 PM to 4:00 PM",
+    "type": "pt",
+    "privateScreen1Available": true,
+    "privateScreen2Available": true,
+    "partyHallAvailable": true,
+    "unavailableDates": []
+  },
+  {
+    "time": "4:30 PM to 7:30 PM",
+    "type": "pt",
+    "privateScreen1Available": true,
+    "privateScreen2Available": true,
+    "partyHallAvailable": true,
+    "unavailableDates": []
+  },
+  {
+    "time": "8:00 PM to 11:00 PM",
+    "type": "pt",
+    "privateScreen1Available": true,
+    "privateScreen2Available": true,
+    "partyHallAvailable": true,
+    "unavailableDates": []
+  },
+  {
+    "time": "11:00 AM to 03:00 PM",
+    "type": "ph",
+    "privateScreen1Available": true,
+    "privateScreen2Available": true,
+    "partyHallAvailable": true,
+    "unavailableDates": []
+  },
+  {
+    "time": "6:00 PM to 10:00 PM",
+    "type": "ph",
+    "privateScreen1Available": true,
+    "privateScreen2Available": true,
+    "partyHallAvailable": true,
+    "unavailableDates": []
+  }
+]

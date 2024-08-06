@@ -2,7 +2,11 @@ const mongoose = require('mongoose');
 
 const OrderSchema = new mongoose.Schema({
   occasion: String,
-  event: String,
+  event: {
+    type: String,
+    required: true,
+    enum: ['Private Screen-1', 'Private Screen-2', 'Party Hall']
+  },
   theme: String,
   persons: Number,
   date: {

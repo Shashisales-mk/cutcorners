@@ -3,33 +3,18 @@ const router = express.Router();
 const Order = require('../models/Order');
 const Slot = require('../models/Slot');
 const cron = require('node-cron');
-
 // Add new order
 router.post('/add-order', async (req, res) => {
   try {
-    const {
-      occasion,
-      event,
-      theme,
-      persons,
-      date,
-      slot,
-      'categories[]': categories,
-      'products[]': products,
-      billingName,
-      billingEmail,
-      billingPhone,
-      billingDetails
+    const { 
+      occasion, event, theme, persons, date, slot, 
+      'categories[]': categories, 'products[]': products, 
+      billingName, billingEmail, billingPhone, billingDetails 
     } = req.body;
 
-    // Ensure categories and products are always arrays
     const categoriesArray = Array.isArray(categories) ? categories : [categories].filter(Boolean);
     const productsArray = Array.isArray(products) ? products : [products].filter(Boolean);
 
-    console.log('Categories:', categoriesArray);
-    console.log('Products:', productsArray);
-
-    // Ensure billingDetails are numbers
     const parsedBillingDetails = {
       hallRent: parseFloat(billingDetails.hallRent) || 0,
       additionalPersonCharge: parseFloat(billingDetails.additionalPersonCharge) || 0,
@@ -38,32 +23,36 @@ router.post('/add-order', async (req, res) => {
     };
 
     const newOrder = new Order({
-      occasion,
-      event,
-      theme,
-      persons,
-      date,
-      slot,
-      categories: categoriesArray,
-      products: productsArray,
-      billingName,
-      billingEmail,
-      billingPhone,
+      occasion, event, theme, persons, date, slot,
+      categories: categoriesArray, products: productsArray,
+      billingName, billingEmail, billingPhone,
       billingDetails: parsedBillingDetails,
       status: 'Approved'
     });
 
     await newOrder.save();
 
-    // Update slot availability and set availableFrom date
-    const orderDate = new Date(date);
-    const availableFrom = new Date(orderDate);
-    availableFrom.setDate(availableFrom.getDate() + 1); // Set to next day
+    // Update slot availability
+    const slotToUpdate = await Slot.findById(slot);
+    if (slotToUpdate) {
+      const orderDate = new Date(date);
+      orderDate.setHours(0, 0, 0, 0); // Set to start of day
 
-    await Slot.findByIdAndUpdate(slot, {
-      isAvailable: false,
-      availableFrom: availableFrom
-    });
+      slotToUpdate.unavailableDates.push({
+        screen: event,
+        date: orderDate
+      });
+
+      if (event === 'Private Screen-1') {
+        slotToUpdate.privateScreen1Available = false;
+      } else if (event === 'Private Screen-2') {
+        slotToUpdate.privateScreen2Available = false;
+      } else if (event === 'Party Hall') {
+        slotToUpdate.partyHallAvailable = false;
+      }
+
+      await slotToUpdate.save();
+    }
 
     res.redirect('/admin-panel');
   } catch (error) {
@@ -91,11 +80,28 @@ router.get('/cancel-order/:id', async (req, res) => {
   try {
     const order = await Order.findByIdAndUpdate(req.params.id, { status: 'cancelled' });
     
-    // Make the slot available immediately
-    await Slot.findByIdAndUpdate(order.slot, { 
-      isAvailable: true,
-      availableFrom: null
-    });
+    // Make the slot available again
+    const slot = await Slot.findById(order.slot);
+    if (slot) {
+      const orderDate = new Date(order.date);
+      orderDate.setHours(0, 0, 0, 0); // Set to start of day
+
+      // Remove the unavailable date for this order
+      slot.unavailableDates = slot.unavailableDates.filter(ud => 
+        ud.screen !== order.event || ud.date.getTime() !== orderDate.getTime()
+      );
+
+      // Reset availability based on remaining unavailable dates
+      if (order.event === 'Private Screen-1') {
+        slot.privateScreen1Available = !slot.unavailableDates.some(ud => ud.screen === 'Private Screen-1');
+      } else if (order.event === 'Private Screen-2') {
+        slot.privateScreen2Available = !slot.unavailableDates.some(ud => ud.screen === 'Private Screen-2');
+      } else if (order.event === 'Party Hall') {
+        slot.partyHallAvailable = !slot.unavailableDates.some(ud => ud.screen === 'Party Hall');
+      }
+
+      await slot.save();
+    }
 
     res.redirect('/admin-panel');
   } catch (error) {
@@ -104,28 +110,56 @@ router.get('/cancel-order/:id', async (req, res) => {
   }
 });
 
-// Function to update slot availability
 async function updateSlotAvailability() {
   const now = new Date();
+  now.setHours(0, 0, 0, 0); // Set to start of day
+  
   try {
-    const slotsToUpdate = await Slot.find({
-      isAvailable: false,
-      availableFrom: { $lte: now }
-    });
-
-    for (let slot of slotsToUpdate) {
-      slot.isAvailable = true;
-      slot.availableFrom = null;
-      await slot.save();
-    }
-
-    console.log(`Updated availability for ${slotsToUpdate.length} slots.`);
+      const slots = await Slot.find();
+      
+      for (let slot of slots) {
+          let updated = false;
+          
+          slot.unavailableDates = slot.unavailableDates.filter(ud => {
+              // Compare dates without time
+              const udDate = new Date(ud.date);
+              udDate.setHours(0, 0, 0, 0);
+              return udDate >= now;
+          });
+          
+          const ps1Unavailable = slot.unavailableDates.some(ud => ud.screen === 'Private Screen-1');
+          const ps2Unavailable = slot.unavailableDates.some(ud => ud.screen === 'Private Screen-2');
+          const phUnavailable = slot.unavailableDates.some(ud => ud.screen === 'Party Hall');
+          
+          if (slot.privateScreen1Available !== !ps1Unavailable) {
+              slot.privateScreen1Available = !ps1Unavailable;
+              updated = true;
+          }
+          if (slot.privateScreen2Available !== !ps2Unavailable) {
+              slot.privateScreen2Available = !ps2Unavailable;
+              updated = true;
+          }
+          if (slot.partyHallAvailable !== !phUnavailable) {
+              slot.partyHallAvailable = !phUnavailable;
+              updated = true;
+          }
+          
+          if (updated) {
+              await slot.save();
+              console.log(`Updated availability for slot: ${slot._id}`);
+          }
+      }
+      
+      console.log(`Checked availability for ${slots.length} slots.`);
   } catch (error) {
-    console.error('Error updating slot availability:', error);
+      console.error('Error updating slot availability:', error);
   }
 }
 
 // Schedule the update function to run daily at midnight
-cron.schedule('0 0 * * *', updateSlotAvailability);
+cron.schedule('0 0 * * *', () => {
+  console.log('Running daily slot availability update');
+  updateSlotAvailability();
+});
 
 module.exports = router;

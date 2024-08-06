@@ -28,20 +28,48 @@ router.post('/delete-slot/:id', async (req, res) => {
 // Update slot availability
 router.post('/update-slot/:id', async (req, res) => {
     try {
-        const { date } = req.body;
+        const { date, screen } = req.body;
         const slot = await Slot.findById(req.params.id);
         
-        if (slot.isAvailable) {
-            // If making unavailable
-            slot.isAvailable = false;
-            slot.availableFrom = new Date(date);
-            slot.availableFrom.setDate(slot.availableFrom.getDate() + 1); // Set to next day
+        const existingUnavailableDate = slot.unavailableDates.find(
+            ud => ud.date.toDateString() === new Date(date).toDateString() && ud.screen === screen
+        );
+
+        if (!existingUnavailableDate) {
+            slot.unavailableDates.push({ date: new Date(date), screen });
+            
+            switch (screen) {
+                case 'private-screen-1':
+                    slot.privateScreen1Available = false;
+                    break;
+                case 'private-screen-2':
+                    slot.privateScreen2Available = false;
+                    break;
+                case 'party-hall':
+                    slot.partyHallAvailable = false;
+                    break;
+            }
         } else {
-            // If making available
-            slot.isAvailable = true;
-            slot.availableFrom = null;
+            slot.unavailableDates = slot.unavailableDates.filter(
+                ud => !(ud.date.toDateString() === new Date(date).toDateString() && ud.screen === screen)
+            );
+            
+            // Reset availability if there are no more unavailable dates for this screen
+            if (!slot.unavailableDates.some(ud => ud.screen === screen)) {
+                switch (screen) {
+                    case 'private-screen-1':
+                        slot.privateScreen1Available = true;
+                        break;
+                    case 'private-screen-2':
+                        slot.privateScreen2Available = true;
+                        break;
+                    case 'party-hall':
+                        slot.partyHallAvailable = true;
+                        break;
+                }
+            }
         }
-        
+
         await slot.save();
         res.redirect('/admin-panel');
     } catch (error) {
@@ -49,28 +77,56 @@ router.post('/update-slot/:id', async (req, res) => {
     }
 });
 
-// Function to update slot availability
 async function updateSlotAvailability() {
     const now = new Date();
+    now.setHours(0, 0, 0, 0); // Set to start of day
+    
     try {
-        const slotsToUpdate = await Slot.find({
-            isAvailable: false,
-            availableFrom: { $lte: now }
-        });
-
-        for (let slot of slotsToUpdate) {
-            slot.isAvailable = true;
-            slot.availableFrom = null;
-            await slot.save();
+        const slots = await Slot.find();
+        
+        for (let slot of slots) {
+            let updated = false;
+            
+            slot.unavailableDates = slot.unavailableDates.filter(ud => {
+                // Compare dates without time
+                const udDate = new Date(ud.date);
+                udDate.setHours(0, 0, 0, 0);
+                return udDate >= now;
+            });
+            
+            const ps1Unavailable = slot.unavailableDates.some(ud => ud.screen === 'Private Screen-1');
+            const ps2Unavailable = slot.unavailableDates.some(ud => ud.screen === 'Private Screen-2');
+            const phUnavailable = slot.unavailableDates.some(ud => ud.screen === 'Party Hall');
+            
+            if (slot.privateScreen1Available !== !ps1Unavailable) {
+                slot.privateScreen1Available = !ps1Unavailable;
+                updated = true;
+            }
+            if (slot.privateScreen2Available !== !ps2Unavailable) {
+                slot.privateScreen2Available = !ps2Unavailable;
+                updated = true;
+            }
+            if (slot.partyHallAvailable !== !phUnavailable) {
+                slot.partyHallAvailable = !phUnavailable;
+                updated = true;
+            }
+            
+            if (updated) {
+                await slot.save();
+                console.log(`Updated availability for slot: ${slot._id}`);
+            }
         }
-
-        console.log(`Updated availability for ${slotsToUpdate.length} slots.`);
+        
+        console.log(`Checked availability for ${slots.length} slots.`);
     } catch (error) {
         console.error('Error updating slot availability:', error);
     }
 }
 
 // Schedule the update function to run daily at midnight
-cron.schedule('0 0 * * *', updateSlotAvailability);
+cron.schedule('0 0 * * *', () => {
+    console.log('Running daily slot availability update');
+    updateSlotAvailability();
+});
 
 module.exports = router;

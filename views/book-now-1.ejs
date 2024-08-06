@@ -102,6 +102,7 @@
                 <li>
                   <img style="height: 170px;width: 170px;" src="<%= occasion.imageUrl %>" alt="<%= occasion.name %>">
                   <p align="center"><span style="color:red"><b><%= occasion.name %></b></span></p>
+                  <input type="hidden" name="ocassionName" value="<%= occasion.name %>">
                   <input style="display: flex;justify-content: center;" type="radio" name="occasionId" value="<%= occasion._id %>">
                 </li>
                   <% }); %>

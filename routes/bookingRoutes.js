@@ -6,17 +6,41 @@ const Product = require('../models/Product');
 const Booking = require('../models/Booking');
 const TimeSlot = require('../models/Slot'); 
 const cron = require('node-cron');
+const Theatreimages = require('../models/Theatreimage')
 
-// Step 1: Select date and screen
 router.get('/', async (req, res) => {
   try {
-    const ptSlots = await TimeSlot.find({ type: 'pt', isAvailable: true });
-    const phSlots = await TimeSlot.find({ type: 'ph', isAvailable: true });
+    const date = new Date(req.query.date); // Assume date is passed as a query parameter
     
-    // console.log('PT Slots:', ptSlots);
-    // console.log('PH Slots:', phSlots);
+    let ptSlots = await TimeSlot.find({ type: 'pt' });
+    let phSlots = await TimeSlot.find({ type: 'ph' });
+    const images = await Theatreimages.find();
+
+    // Filter slots based on availability for the selected date
+    ptSlots = ptSlots.map(slot => ({
+      ...slot.toObject(),
+      privateScreen1Available: slot.privateScreen1Available && 
+        !slot.unavailableDates.some(ud => 
+          ud.date.toDateString() === date.toDateString() && 
+          ud.screen === 'private-screen-1'
+        ),
+      privateScreen2Available: slot.privateScreen2Available && 
+        !slot.unavailableDates.some(ud => 
+          ud.date.toDateString() === date.toDateString() && 
+          ud.screen === 'private-screen-2'
+        )
+    }));
+
+    phSlots = phSlots.map(slot => ({
+      ...slot.toObject(),
+      partyHallAvailable: slot.partyHallAvailable && 
+        !slot.unavailableDates.some(ud => 
+          ud.date.toDateString() === date.toDateString() && 
+          ud.screen === 'party-hall'
+        )
+    }));
     
-    res.render('book-now', { ptSlots, phSlots });
+    res.render('book-now', { ptSlots, phSlots, selectedDate: date, images });
   } catch (error) {
     console.error('Error fetching time slots:', error);
     res.status(500).render('error', { message: 'An error occurred while loading available time slots.' });
@@ -195,17 +219,26 @@ router.post('/final', async (req, res) => {
     
     await newBooking.save();
 
-    // Update slot availability
-    const availableFrom = new Date(parsedDate);
-    availableFrom.setDate(availableFrom.getDate() + 1); // Set to next day
+    /// Update slot availability
+    const slot = await TimeSlot.findOne({ time: timeSlot, type: screen.startsWith('private') ? 'pt' : 'ph' });
+    
+    if (slot) {
+      slot.unavailableDates.push({
+        screen: screen,
+        date: parsedDate
+      });
 
-    await TimeSlot.findOneAndUpdate(
-      { time: timeSlot, type: screen.startsWith('private') ? 'pt' : 'ph' },
-      { 
-        isAvailable: false,
-        availableFrom: availableFrom
+      if (screen === 'private-screen-1') {
+        slot.privateScreen1Available = false;
+      } else if (screen === 'private-screen-2') {
+        slot.privateScreen2Available = false;
+      } else if (screen === 'party-hall') {
+        slot.partyHallAvailable = false;
       }
-    );
+
+      await slot.save();
+    }
+
 
     res.redirect('/');
   } catch (error) {
@@ -214,29 +247,57 @@ router.post('/final', async (req, res) => {
   }
 });
 
-// Function to update slot availability
 async function updateSlotAvailability() {
   const now = new Date();
+  now.setHours(0, 0, 0, 0); // Set to start of day
+  
   try {
-    const slotsToUpdate = await TimeSlot.find({
-      isAvailable: false,
-      availableFrom: { $lte: now }
-    });
-
-    for (let slot of slotsToUpdate) {
-      slot.isAvailable = true;
-      slot.availableFrom = null;
-      await slot.save();
-    }
-
-    console.log(`Updated availability for ${slotsToUpdate.length} slots.`);
+      const slots = await Slot.find();
+      
+      for (let slot of slots) {
+          let updated = false;
+          
+          slot.unavailableDates = slot.unavailableDates.filter(ud => {
+              // Compare dates without time
+              const udDate = new Date(ud.date);
+              udDate.setHours(0, 0, 0, 0);
+              return udDate >= now;
+          });
+          
+          const ps1Unavailable = slot.unavailableDates.some(ud => ud.screen === 'Private Screen-1');
+          const ps2Unavailable = slot.unavailableDates.some(ud => ud.screen === 'Private Screen-2');
+          const phUnavailable = slot.unavailableDates.some(ud => ud.screen === 'Party Hall');
+          
+          if (slot.privateScreen1Available !== !ps1Unavailable) {
+              slot.privateScreen1Available = !ps1Unavailable;
+              updated = true;
+          }
+          if (slot.privateScreen2Available !== !ps2Unavailable) {
+              slot.privateScreen2Available = !ps2Unavailable;
+              updated = true;
+          }
+          if (slot.partyHallAvailable !== !phUnavailable) {
+              slot.partyHallAvailable = !phUnavailable;
+              updated = true;
+          }
+          
+          if (updated) {
+              await slot.save();
+              console.log(`Updated availability for slot: ${slot._id}`);
+          }
+      }
+      
+      console.log(`Checked availability for ${slots.length} slots.`);
   } catch (error) {
-    console.error('Error updating slot availability:', error);
+      console.error('Error updating slot availability:', error);
   }
 }
 
 // Schedule the update function to run daily at midnight
-cron.schedule('0 0 * * *', updateSlotAvailability);
+cron.schedule('0 0 * * *', () => {
+  console.log('Running daily slot availability update');
+  updateSlotAvailability();
+});
 
 
 module.exports = router;

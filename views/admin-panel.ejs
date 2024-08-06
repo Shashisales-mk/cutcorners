@@ -9,7 +9,6 @@
 
 
     <link rel="icon" href="/assets/img/favicon1.png">
-
     <style>
         body {
             display: block;
@@ -381,6 +380,49 @@
             margin-top: 2vw;
 
         }
+        .screenin{
+            display: flex;
+            align-items: center;
+            gap: 1vw;
+        }
+        .screenin img{
+            height: 7vw;
+            width: 7vw;
+        }
+        .scrollable-list {
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            }
+
+            .scrollable-list li {
+            /* padding: 10px; */
+            border-bottom: 1px solid #ddd;
+            }
+
+            .scrollable-list li:last-child {
+            border-bottom: none;
+            }
+            .scrollable-list::-webkit-scrollbar {
+            width: 8px;
+            }
+
+            .scrollable-list::-webkit-scrollbar-track {
+            background: #f0f0f0;
+            border-radius: 10px;
+            }
+
+            .scrollable-list::-webkit-scrollbar-thumb {
+            background-color: #888;
+            border-radius: 10px;
+            border: 2px solid #f0f0f0;
+            }
+
+            .scrollable-list::-webkit-scrollbar-thumb:hover {
+            background-color: #555;
+            }
     </style>
 </head>
 
@@ -405,7 +447,7 @@
         </header>
         <div class="admin-container">
             <div class="sidebar-menu">
-                <ul>
+                <ul class="scrollable-list">
                     <li class="active" id="show1">Dashboard</li>
                     <li class="showe" id="show2">Home Banners</li>
                     <li id="show3">Add on's</li>
@@ -414,7 +456,8 @@
                     <li id="show6">Pages</li>
                     <li id="show7">Booking</li>
                     <li id="show8">Theme Section</li>
-                </ul>
+                    <li id="show9">Screen Images</li>        
+                  </ul>
             </div>
             <div class="container-right">
                 <h1 style="font-size: 3vw;">Welcome CutCorners Admin!</h1>
@@ -640,10 +683,12 @@
 
                             <label for="themeSelect">Select Theme:</label>
                             <select id="themeSelect" name="themeId" required>
-                              <% menuItems.filter(item => item.category === 'theme').forEach(theme => { %>
-                                <option value="<%= theme._id %>"><%= theme.name %></option>
-                                
-                              <% }) %>
+                                <% menuItems.filter(item=> item.category === 'theme').forEach(theme => { %>
+                                    <option value="<%= theme._id %>">
+                                        <%= theme.name %>
+                                    </option>
+
+                                    <% }) %>
                             </select>
 
                             <button type="submit">Create Page</button>
@@ -657,10 +702,11 @@
                                 <li><a href="<%= page.url %>">
                                         <%= page.title %>
                                     </a></li>
-                                    <li>
-                                        <form action="/delete-page/<%= page._id %>?_method=DELETE" method="POST">
-                                            <input type="submit" value="Delete">
-                                          </form></li>
+                                <li>
+                                    <form action="/delete-page/<%= page._id %>?_method=DELETE" method="POST">
+                                        <input type="submit" value="Delete">
+                                    </form>
+                                </li>
                                 <% }) %>
                         </ul>
 
@@ -753,11 +799,10 @@
                                     <p>
                                         <label for="event">Event:</label>
                                         <select id="event" name="event" required>
-                                            <% menuItems.filter(item=> item.category === 'event').forEach(item => { %>
-                                                <option value="<%= item.name %>">
-                                                    <%= item.name %>
-                                                </option>
-                                                <% }); %>
+                                            <option value="Private Screen-1">Private Screen-1</option>
+                                            <option value="Private Screen-2">Private Screen-2</option>
+                                            <option value="Party Hall">Party Hall</option>
+
                                         </select>
                                     </p>
 
@@ -780,15 +825,17 @@
                                     <p>
                                         <label for="slot">Slot:</label>
                                         <select id="slot" name="slot" required>
-                                            <% if (availableSlots && availableSlots.length> 0) { %>
-                                                <% availableSlots.forEach(slot=> { %>
-                                                    <option value="<%= slot._id %>">
-                                                        <%= slot.date %> - <%= slot.time %>
-                                                    </option>
-                                                    <% }); %>
-                                                        <% } else { %>
-                                                            <option value="">No available slots</option>
-                                                            <% } %>
+                                            <option value="">Select a slot</option>
+                                            <% ptSlots.forEach(slot => { %>
+                                                <option value="<%= slot._id %>" data-event="Private Screen-1,Private Screen-2">
+                                                    <%= slot.time %> (Private Screens)
+                                                </option>
+                                            <% }); %>
+                                            <% phSlots.forEach(slot => { %>
+                                                <option value="<%= slot._id %>" data-event="Party Hall">
+                                                    <%= slot.time %> (Party Hall)
+                                                </option>
+                                            <% }); %>
                                         </select>
                                     </p>
                                 </div>
@@ -800,7 +847,7 @@
                                 <div style="display: flex;gap: 2rem;margin-top: 3rem;">
                                     <p>
                                         <label for="categories">Categories:</label>
-                                        <select id="categories" name="categories[]" multiple required>
+                                        <select id="categories" name="categories[]" multiple>
                                             <% categories.forEach(category=> { %>
                                                 <option value="<%= category._id %>" data-price="<%= category.price %>">
                                                     <%= category.name %> - $<%= category.price %>
@@ -811,7 +858,7 @@
 
                                     <p>
                                         <label for="products">Products:</label>
-                                        <select id="products" name="products[]" multiple required>
+                                        <select id="products" name="products[]" multiple>
                                             <% products.forEach(product=> { %>
                                                 <option value="<%= product._id %>" data-price="<%= product.price %>">
                                                     <%= product.name %> - $<%= product.price %>
@@ -881,6 +928,7 @@
                             </form>
 
 
+                           
                             <h2>Add New Slot</h2>
                             <form action="/slot/add-slot" method="POST">
                                 <input type="text" name="time" placeholder="Time" required>
@@ -890,22 +938,25 @@
                                 </select>
                                 <button type="submit">Add Slot</button>
                             </form>
-
+                            
                             <h2>Existing Slots</h2>
                             <ul>
                                 <% slots.forEach(slot => { %>
                                     <li style="margin-top: 1vw;display: flex;gap: 2vw;">
                                         <p style="width: 30vw;">
                                             <%= slot.time %> - <%= slot.type %>
-                                            (<%= slot.isAvailable ? 'Available' : 'Unavailable until ' + slot.availableFrom.toDateString() %>)
+                                            (PS1: <%= slot.privateScreen1Available ? 'Available' : 'Unavailable' %>,
+                                            PS2: <%= slot.privateScreen2Available ? 'Available' : 'Unavailable' %>,
+                                            PH: <%= slot.partyHallAvailable ? 'Available' : 'Unavailable' %>)
                                         </p>
                                         <form action="/slot/update-slot/<%= slot._id %>" method="POST" style="display: inline;width: 20vw;">
-                                            <% if (slot.isAvailable) { %>
-                                                <input type="date" name="date" required>
-                                                <button type="submit">Make Unavailable</button>
-                                            <% } else { %>
-                                                <button type="submit">Make Available</button>
-                                            <% } %>
+                                            <input type="date" name="date" required>
+                                            <select name="screen" required>
+                                                <option value="private-screen-1">Private Screen 1</option>
+                                                <option value="private-screen-2">Private Screen 2</option>
+                                                <option value="party-hall">Party Hall</option>
+                                            </select>
+                                            <button type="submit">Toggle Availability</button>
                                         </form>
                                         <form action="/slot/delete-slot/<%= slot._id %>" method="POST" style="display: inline;">
                                             <button type="submit">Delete</button>
@@ -933,9 +984,11 @@
                             <div>
                                 <label for="page">Page:</label>
                                 <select name="page" id="page" required>
-                                    <% pages.forEach(page => { %>
-                                        <option value="<%= page._id %>"><%= page.title %></option>
-                                    <% }) %>
+                                    <% pages.forEach(page=> { %>
+                                        <option value="<%= page._id %>">
+                                            <%= page.title %>
+                                        </option>
+                                        <% }) %>
                                 </select>
                             </div>
                             <div>
@@ -970,21 +1023,87 @@
                         </form>
 
                         <ul id="sectionList">
-                            <% sections.forEach(section => { %>
-                              <li>
-                                <h3><%= section.title %></h3>
-                                <p><%= section._id %></p>
-                                <form action="/section/delete-section/<%= section._id %>?_method=DELETE" method="POST">
-                                  <input type="submit" value="Delete">
-                                </form>
-                              </li>
-                            <% }) %>
-                          </ul>
-                          
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th style="width: 20vw;">Delete Category</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% sections.forEach(section=> { %>
+                                        <tr>
+                                            <td>
+                                                <h3>
+                                                    <%= section.title %>
+                                                </h3>
+                                            </td>
+                                            <td>
+                                                <form style="margin-top: 0;" action="/section/delete-section/<%= section._id %>?_method=DELETE"
+                                                    method="POST">
+                                                    <input type="submit" value="Delete">
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        <% }) %>
+
+                                </tbody>
+                            </table>
+                            
+                        </ul>
+
                     </div>
 
 
 
+                    <div class="scr-img">
+                        <div class="book-now-screens">
+                            <!-- <h1>Upload Image</h1>
+                            <form action="/theatreimages/upload" method="POST" enctype="multipart/form-data">
+                                <input type="text" name="title" placeholder="Image Title" required>
+                                <input type="file" name="image" accept="image/*" required>
+                                <button type="submit">Upload</button>
+                            </form> -->
+                            <h1>Book Now Page Images</h1>
+                            <h3>Update Image</h3>
+                            <% images.forEach(image => { %>
+                            <form style="margin-top: 0.5vw;display: flex;gap: 1vw;align-items: center;" action="/theatreimages/update/<%= image._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                                <img id="img1" alt="balloon" height="15vw" width="15vw" style="height: 5vw;width: 5vw;" src="<%= image.url %>">
+                                <input type="text" name="title" value="<%= image.title %>" required>
+                                <input type="file" name="image" accept="image/*">
+                                <button type="submit">Update</button>
+                            </form>
+                            <% }); %>
+                        </div>
+                        <div class="screen-section">
+                            <h2>Manage Screen Images</h2>
+    
+                            <% screens.forEach(screen=> { %>
+                                <form action="/admin/update-screen-images" method="POST" enctype="multipart/form-data">
+                                    <h3>Screen <%= screen.screenId %>
+                                    </h3>
+                                    <input type="hidden" name="screenId" value="<%= screen.screenId %>">
+                                    <div class="screenin">
+                                        <label for="image1-<%= screen.screenId %>">Image 1:</label>
+                                        <input type="file" id="image1-<%= screen.screenId %>" name="image1"
+                                            accept="image/*">
+                                        <% if (screen.image1Url) { %>
+                                            <img src="<%= screen.image1Url %>" alt="Current Image 1" width="100">
+                                            <% } %>
+                                    </div>
+                                    <div class="screenin" style="margin-top: 1vw;">
+                                        <label for="image2-<%= screen.screenId %>">Image 2:</label>
+                                        <input type="file" id="image2-<%= screen.screenId %>" name="image2"
+                                            accept="image/*">
+                                        <% if (screen.image2Url) { %>
+                                            <img src="<%= screen.image2Url %>" alt="Current Image 2" width="100">
+                                            <% } %>
+                                    </div>
+                                    <button type="submit">Update Images</button>
+                                </form>
+                                <% }) %>
+                        </div>
+                    </div>
 
 
                 </div>
@@ -1055,25 +1174,25 @@
 
 
 
-   <script>
-    document.getElementById('createPageForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const formData = new FormData(e.target);
-  const response = await fetch('/create-page', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(Object.fromEntries(formData)),
-  });
-  const result = await response.json();
-  if (result.success) {
-    alert(`Page created successfully! You can view it at: ${result.url}\nTheme: ${result.themeName}`);
-  } else {
-    alert(`Error: ${result.message}`);
-  }
-});
-   </script>
+    <script>
+        document.getElementById('createPageForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const response = await fetch('/create-page', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(Object.fromEntries(formData)),
+            });
+            const result = await response.json();
+            if (result.success) {
+                alert(`Page created successfully! You can view it at: ${result.url}\nTheme: ${result.themeName}`);
+            } else {
+                alert(`Error: ${result.message}`);
+            }
+        });
+    </script>
 
 
     <script>
@@ -1183,6 +1302,7 @@
             document.querySelector('.newpgfrm').style.display = 'none';
             document.querySelector('.booking-section').style.display = 'none';
             document.querySelector('.theme-section').style.display = 'none';
+            document.querySelector('.scr-img').style.display = 'none';
         }
 
         // Initially show only the dashboard section
@@ -1228,6 +1348,10 @@
         document.getElementById('show8').addEventListener('click', function () {
             hideAllSections();
             document.querySelector('.theme-section').style.display = 'block';
+        });
+        document.getElementById('show9').addEventListener('click', function () {
+            hideAllSections();
+            document.querySelector('.scr-img').style.display = 'block';
         });
     </script>
     <script>

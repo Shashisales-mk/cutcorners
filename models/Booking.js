@@ -15,7 +15,7 @@ const BookingSchema = new mongoose.Schema({
   },
   occasionName: {
     type: String,
-    required: true
+    
   },
   screen: {
     type: String,
@@ -45,15 +45,15 @@ const BookingSchema = new mongoose.Schema({
     },
     additionalPersonCharge: {
       type: Number,
-      required: true
+      
     },
     addonsBill: {
       type: Number,
-      required: true
+      
     },
     servicesBill: {
       type: Number,
-      required: true
+      
     }
   }
 });

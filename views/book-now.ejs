@@ -40,7 +40,9 @@
             <div class="col-lg-4 col-md-6">
               <div class="item">
                 <div class="balloon-shap" align="center">
-                  <img alt="balloon" src="/assets/img/bookscreen1.png">
+                  <% if (images[0]) { %>
+                    <img id="img1" alt="balloon" height="85%" width="70%" src="<%= images[0].url %>">
+                  <% } %>
                 </div><br>
                 <h3>PRIVATE SCREEN - 1</h3><br>
                 <div class="row">
@@ -53,7 +55,9 @@
                         <select name="timeSlot" class="nice-select Advice country_to_state" required>
                           <option value="">AVAILABLE SLOTS</option>
                           <% ptSlots.forEach(slot => { %>
-                            <option value="<%= slot.time %>"><%= slot.time %></option>
+                            <% if (slot.privateScreen1Available) { %>
+                              <option value="<%= slot.time %>"><%= slot.time %></option>
+                            <% } %>
                           <% }) %>
                         </select>
             
@@ -79,7 +83,9 @@
             <div class="col-lg-4 col-md-6">
               <div class="item">
                 <div class="balloon-shap" align="center">
-                  <img alt="balloon" src="/assets/img/bookscreen2.png">
+                  <% if (images[1]) { %>
+                    <img id="img2" alt="balloon" height="85%" width="70%" src="<%= images[1].url %>">
+                  <% } %>
                 </div><br>
                 <h3>PRIVATE SCREEN - 2</h3><br>
                 <div class="row">
@@ -92,7 +98,9 @@
                         <select name="timeSlot" class="nice-select Advice country_to_state" required>
                           <option value="">AVAILABLE SLOTS</option>
                           <% ptSlots.forEach(slot => { %>
-                            <option value="<%= slot.time %>"><%= slot.time %></option>
+                            <% if (slot.privateScreen2Available) { %>
+                              <option value="<%= slot.time %>"><%= slot.time %></option>
+                            <% } %>
                           <% }) %>
                         </select>
             
@@ -123,7 +131,9 @@
             <div class="col-lg-4 col-md-6">
               <div class="item">
                 <div class="balloon-shap" align="center">
-                  <img alt="balloon" src="/assets/img/bookpartyhall.png">
+                  <% if (images[2]) { %>
+                    <img id="img3" alt="balloon" height="85%" width="70%" src="<%= images[2].url %>">
+                  <% } %>
                 </div><br>
                 <h3>PARTY HALL</h3><br>
                 <div class="row">
@@ -136,7 +146,9 @@
                         <select name="timeSlot" class="nice-select Advice country_to_state" required>
                           <option value="">AVAILABLE SLOTS</option>
                           <% phSlots.forEach(slot => { %>
-                            <option value="<%= slot.time %>"><%= slot.time %></option>
+                            <% if (slot.partyHallAvailable) { %>
+                              <option value="<%= slot.time %>"><%= slot.time %></option>
+                            <% } %>
                           <% }) %>
                         </select>
                         <select name="numberOfPeople" class="nice-select Advice country_to_state" required>

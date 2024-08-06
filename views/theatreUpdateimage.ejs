@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Update Image</title>
+</head>
+<body>
+  <h1>Update Image</h1>
+  <form action="/images/update/<%= image._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+    <input type="text" name="title" value="<%= image.title %>" required>
+    <input type="file" name="image" accept="image/*">
+    <button type="submit">Update</button>
+  </form>
+</body>
+</html>

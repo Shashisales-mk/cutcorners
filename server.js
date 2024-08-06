@@ -33,6 +33,9 @@ const jsSHA = require('jssha');
 const request = require('request');
 const dotenv = require('dotenv');
 const MongoStore = require('connect-mongo');
+const Screen = require('./models/screenImages');
+const imageRoutes = require('./routes/theatreimages');
+const Theatreimages = require('./models/Theatreimage')
 
 
 
@@ -81,6 +84,19 @@ app.use(methodOverride("_method"));
 app.use(flash());
 
 dotenv.config();
+
+
+// Set up Multer
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/uploads/') // Make sure this directory exists
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname)) // Appending extension
+  }
+});
+
+const upload = multer({ storage: storage });
 
 
 
@@ -149,6 +165,7 @@ app.use('/booking', bookingRoutes);
 app.use('/slot', slotsroute);
 
 app.use('/section', sectionRoutes);
+app.use('/theatreimages', imageRoutes);
 
 
 const MERCHANT_KEY = process.env.PAYU_MERCHANT_KEY;
@@ -201,11 +218,48 @@ app.get("/admin-panel", isAdmin , async (req, res) => {
     const pages = await Page.find().sort({ createdAt: -1 });
     const bookings = await Booking.find().sort({createdAt: -1})
     const sections = await Section.find();
+    const screens = await Screen.find();
+    const images = await Theatreimages.find();
+
+    // Fetch all slots
+    let ptSlots = await Slot.find({ type: 'pt' });
+    let phSlots = await Slot.find({ type: 'ph' });
+
+    // If a date is provided, filter the slots
+    if (req.query.date) {
+      const selectedDate = new Date(req.query.date);
+      
+      ptSlots = ptSlots.filter(slot => 
+        slot.privateScreen1Available && 
+        slot.privateScreen2Available && 
+        !slot.unavailableDates.some(ud => 
+          ud.date.toDateString() === selectedDate.toDateString() && 
+          (ud.screen === 'Private Screen-1' || ud.screen === 'Private Screen-2')
+        )
+      );
+
+      phSlots = phSlots.filter(slot => 
+        slot.partyHallAvailable && 
+        !slot.unavailableDates.some(ud => 
+          ud.date.toDateString() === selectedDate.toDateString() && 
+          ud.screen === 'Party Hall'
+        )
+      );
+    }
     
 
     res.render('admin-panel', {
       search: search || '',
-      sortBy: sortBy || 'dateDesc',sections, bookings, banners, products, categories, occasions, orders, slots, availableSlots, menuItems, pages
+      sortBy: sortBy || 'dateDesc', 
+      screens,sections, bookings, 
+      banners, products, categories, 
+      occasions, orders, slots, 
+      availableSlots, menuItems, 
+      pages,
+      ptSlots,
+      phSlots,
+      selectedDate: req.query.date || '',
+      images
     });
   } catch (err) {
     console.error(err);
@@ -275,9 +329,21 @@ app.get("/book-now", async (req, res) => {
 app.get("/party-hall", async (req, res) => {
   res.render("party-hall")
 })
-app.get("/private-theater", async (req, res) => {
-  res.render("private-theater")
-})
+app.get('/private-theater', async (req, res) => {
+  let screens = await Screen.find();
+  
+  // If no screens in database, create default ones
+  if (screens.length === 0) {
+    const defaultScreens = [
+      { screenId: 'screen1', image1Url: '/assets/img/ps-screen1-1.png', image2Url: '/assets/img/ps-screen1-2.png' },
+      { screenId: 'screen2', image1Url: '/assets/img/ps-screen2-1.png', image2Url: '/assets/img/ps-screen2-2.png' }
+    ];
+    await Screen.insertMany(defaultScreens);
+    screens = await Screen.find();
+  }
+  
+  res.render('private-theater', { screens });
+});
 app.get("/screening", async (req, res) => {
   res.render("screening")
 })
@@ -474,6 +540,48 @@ app.delete('/delete-page/:id', isAdmin, async (req, res) => {
     res.status(500).json({ success: false, message: 'Error deleting page' });
   }
 });
+
+
+// private theater images change route
+// GET route to fetch current images
+app.get('/admin/screen-images', async (req, res) => {
+  let screens = await Screen.find();
+  
+  // If no screens in database, create default ones
+  if (screens.length === 0) {
+    const defaultScreens = [
+      { screenId: 'screen1', image1Url: '/assets/img/ps-screen1-1.png', image2Url: '/assets/img/ps-screen1-2.png' },
+      { screenId: 'screen2', image1Url: '/assets/img/ps-screen2-1.png', image2Url: '/assets/img/ps-screen2-2.png' }
+    ];
+    await Screen.insertMany(defaultScreens);
+    screens = await Screen.find();
+  }
+  
+  res.render('/private-theater', { screens });
+});
+
+
+// POST route to update images
+app.post('/admin/update-screen-images', upload.fields([{ name: 'image1', maxCount: 1 }, { name: 'image2', maxCount: 1 }]), async (req, res) => {
+  const { screenId } = req.body;
+  const updateData = {};
+
+  if (req.files['image1']) {
+    updateData.image1Url = '/uploads/' + req.files['image1'][0].filename;
+  }
+  if (req.files['image2']) {
+    updateData.image2Url = '/uploads/' + req.files['image2'][0].filename;
+  }
+
+  await Screen.findOneAndUpdate({ screenId }, updateData, { upsert: true });
+  res.redirect('/admin-panel');
+});
+
+
+
+
+
+
 
 
 
