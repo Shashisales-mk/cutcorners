@@ -791,8 +791,8 @@ app.post('/payment_gateway/payumoney', (req, res) => {
       firstname: name,
       email: email,
       phone: phone,
-      surl: `http://localhost:4000/payment/success?amount=${amount}`,
-      furl: 'http://localhost:4000/payment/fail',
+      surl: `https://cutcorners.in/payment/success?amount=${amount}`,
+      furl: 'https://cutcorners.in/payment/fail',
       hash: hash,
       service_provider: 'payu_paisa',
     };
