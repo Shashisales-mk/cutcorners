@@ -168,7 +168,7 @@ app.use('/section', sectionRoutes);
 app.use('/theatreimages', imageRoutes);
 
 
-const MERCHANT_KEY = process.env.PAYU_MERCHANT_KEY;
+const MERCHANT_KEY = 'GTTcTd';
 const MERCHANT_SALT = process.env.PAYU_MERCHANT_SALT;
 const PAYU_BASE_URL = 'https://secure.payu.in/_payment';
 
