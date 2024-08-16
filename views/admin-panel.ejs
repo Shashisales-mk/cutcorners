@@ -583,6 +583,7 @@
                                                         <th>Img</th>
                                                         <th style="width: 20vw;">Product Name</th>
                                                         <th>Delete Product</th>
+                                                        <th>Edit Product</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -603,7 +604,12 @@
                                                                     method="POST">
                                                                     <button type="submit">Delete</button>
                                                                 </form>
+
+                                                               
                                                             </td>
+                                                            <td>
+                                                                <button class="edit-button" data-product-id="<%= product._id %>">Edit</button>
+                                                              </td>
                                                         </tr>
                                                         <% }) %>
 
@@ -611,6 +617,26 @@
                                             </table>
                                         </ul>
                                     </div>
+
+                                    <% products.forEach(product=> { %>
+
+                                    <div class="edit-product" style="display: none;" id="edit-form-<%= product._id %>">
+                                        <h2>Edit Product</h2>
+                                        <form action="/admin/products/<%= product._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                                          <input type="text" name="name" value="<%= product.name %>" required>
+                                          <input type="number" name="price" value="<%= product.price %>" required>
+                                          <select name="category" required>
+                                            <% categories.forEach(category => { %>
+                                              <option value="<%= category._id %>" <%= category._id.equals(product.category) ? 'selected' : '' %>><%= category.name %></option>
+                                            <% }) %>
+                                          </select>
+                                          <img src="<%= product.image %>" alt="<%= product.name %>" width="100">
+                                          <input type="file" name="image">
+                                          <button type="submit">Update Product</button>
+                                        </form>
+                                      </div>
+
+                                      <% }) %>
                                 </div>
                             </div>
                         </div>
@@ -1115,6 +1141,24 @@
 
 
 
+    <!-- script for edit product -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const editButtons = document.querySelectorAll('.edit-button');
+          
+          editButtons.forEach(button => {
+            button.addEventListener('click', function() {
+              const productId = this.getAttribute('data-product-id');
+              const editForm = document.getElementById(`edit-form-${productId}`);
+              
+              if (editForm) {
+                editForm.style.display = 'block';
+              }
+            });
+          });
+        });
+        </script>
+    <!-- script for edit product -->
 
 
 

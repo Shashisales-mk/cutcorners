@@ -5,15 +5,7 @@ const Category = require('../models/Category');
 const multer = require('multer');
 const upload = multer({ dest: 'public/uploads/' });
 
-router.get('/', async (req, res) => {
-  const products = await Product.find().populate('category');
-  res.render('products-index', { products });
-});
 
-router.get('/new', async (req, res) => {
-  const categories = await Category.find();
-  res.render('product-new', { categories });
-});
 
 router.post('/', upload.single('image'), async (req, res) => {
   try {
@@ -44,21 +36,17 @@ router.delete('/:id', async (req, res) => {
 });
 
 
-// router.get('/edit/:id', async (req, res) => {
-//   const product = await Product.findById(req.params.id);
-//   const categories = await Category.find();
-//   res.render('product-edit', { product, categories });
-// });
 
-// Update product
-// router.put('/:id', upload.single('image'), async (req, res) => {
-//   const product = await Product.findById(req.params.id);
-//   if (req.file) {
-//     product.image = `/uploads/${req.file.filename}`;
-//   }
-//   Object.assign(product, req.body);
-//   await product.save();
-//   res.redirect('/admin/products');
-// });
+
+
+router.put('/:id', upload.single('image'), async (req, res) => {
+  const product = await Product.findById(req.params.id);
+  if (req.file) {
+    product.image = `/uploads/${req.file.filename}`;
+  }
+  Object.assign(product, req.body);
+  await product.save();
+  res.redirect('/admin-panel');
+});
 
 module.exports = router;
