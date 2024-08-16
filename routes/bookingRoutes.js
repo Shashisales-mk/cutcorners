@@ -49,6 +49,11 @@ router.get('/', async (req, res) => {
 
 router.post('/select-screen', (req, res) => {
   const { date, screen, timeSlot, numberOfPeople } = req.body;
+   // Check if date is provided
+  if (!date) {
+    req.flash('error', 'Date is required');
+    return res.redirect('/booking'); // Redirect back to the booking page
+  }
   req.session.bookingData = { date, screen, timeSlot, numberOfPeople };
   console.log('Booking data stored in session:', req.session.bookingData);
   res.redirect('/booking/select-occasion');
@@ -116,13 +121,13 @@ router.get('/final', async (req, res) => {
       case 'private-screen-1':
         hallRent = 999; // Base rent for 2 people
         if (numberOfPeople > 2) {
-          additionalPersonCharge = (numberOfPeople - 2) * 399;
+          additionalPersonCharge = (numberOfPeople - 2) * 299;
         }
         break;
       case 'private-screen-2':
         hallRent = 1499; // Base rent for 4 people
         if (numberOfPeople > 4) {
-          additionalPersonCharge = (numberOfPeople - 4) * 399;
+          additionalPersonCharge = (numberOfPeople - 4) * 299;
         }
         break;
       case 'party-hall':
@@ -240,7 +245,7 @@ router.post('/final', async (req, res) => {
     }
 
 
-    res.redirect('/');
+    res.redirect('/pay');
   } catch (error) {
     console.error('Booking error:', error);
     res.status(400).render('error', { message: error.message });

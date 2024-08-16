@@ -54,7 +54,7 @@
             <div class="d-flex">
             <input type="radio" id="Create" name="Create" value="Create">
             <label for="Create">
-                NOTE : We collect an advance amount of ₹ 700 + ₹ 50 (Convenience fee) to book the slot. Remaining bill will be collected at the time of check-out.
+                NOTE : We collect an advance amount of ₹ 500 + ₹ 50 (Convenience fee) to book the slot. Remaining bill will be collected at the time of check-out.
             </label>
             </div>
             <div class="d-flex">
@@ -96,12 +96,12 @@
                   <% if (bookingData.screen === 'private-screen-1' && bookingData.numberOfPeople > 2) { %>
                     <tr>
                       <th>Additional People:</th>
-                      <td><%= bookingData.numberOfPeople - 2 %> x ₹399</td>
+                      <td><%= bookingData.numberOfPeople - 2 %> x ₹299</td>
                     </tr>
                   <% } else if (bookingData.screen === 'private-screen-2' && bookingData.numberOfPeople > 4) { %>
                     <tr>
                       <th>Additional People:</th>
-                      <td><%= bookingData.numberOfPeople - 4 %> x ₹399</td>
+                      <td><%= bookingData.numberOfPeople - 4 %> x ₹299</td>
                     </tr>
                   <% } %>
                   <% selectedAddons.forEach(addon => { %>

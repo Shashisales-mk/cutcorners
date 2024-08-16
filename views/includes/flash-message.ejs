@@ -1,0 +1,88 @@
+<!-- views/partials/flash-messages.ejs -->
+
+<style>
+    /* public/styles/flash-messages.css */
+.flash-message {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 10px 0;
+  z-index: 1000;
+  text-align: center;
+}
+
+.flash-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 1200px; /* or any max-width you prefer */
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.flash-error {
+  background-color: #ffcccc;
+  color: #cc0000;
+}
+
+.flash-success {
+  background-color: #ccffcc;
+  color: #006600;
+}
+
+.flash-message p {
+  margin: 0;
+  flex-grow: 1;
+  text-align: center;
+  font-weight: bold;
+  color: #000;
+}
+
+.close-flash {
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0 0 0 10px;
+}
+</style>
+
+<!-- views/partials/flash-messages.ejs -->
+<% if (flashMessages.error || flashMessages.success) { %>
+    <div id="flashMessage" class="flash-message <%= flashMessages.error ? 'flash-error' : 'flash-success' %>">
+      <div class="flash-content">
+        <p><%= flashMessages.error || flashMessages.success %></p>
+        <button id="closeFlash" class="close-flash">&times;</button>
+      </div>
+    </div>
+  <% } %>
+
+<script>
+    // public/scripts/flash-messages.js
+document.addEventListener('DOMContentLoaded', function() {
+  const flashMessage = document.getElementById('flashMessage');
+  const closeButton = document.getElementById('closeFlash');
+
+  if (flashMessage) {
+    // Auto-dismiss after 5 seconds
+    setTimeout(function() {
+      flashMessage.style.opacity = '0';
+      setTimeout(function() {
+        flashMessage.style.display = 'none';
+      }, 600); // Match this to your CSS transition time
+    }, 5000);
+
+    // Close button functionality
+    if (closeButton) {
+      closeButton.addEventListener('click', function() {
+        flashMessage.style.opacity = '0';
+        setTimeout(function() {
+          flashMessage.style.display = 'none';
+        }, 600); // Match this to your CSS transition time
+      });
+    }
+  }
+});
+</script>

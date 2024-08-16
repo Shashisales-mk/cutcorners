@@ -85,6 +85,12 @@ app.use(flash());
 
 dotenv.config();
 
+// Middleware to make flash messages available to all views
+app.use((req, res, next) => {
+  res.locals.flashMessages = req.flash();
+  next();
+});
+
 
 // Set up Multer
 const storage = multer.diskStorage({
@@ -729,12 +735,15 @@ app.get('/payment/success', (req, res) => {
   logger.info('Payment success callback received');
   logger.info('Query parameters:', req.query);
   logger.info('Body:', req.body);
+  const amount = req.query.params;
 
   try {
     // Here you should verify the payment status with PayU
     // For example, by calling their verification API
 
-    res.render('paymentsucess');
+    res.render('paymentsucess' , {
+      amount
+    });
   } catch (error) {
     logger.error('Error in success callback:', error);
     res.status(500).render('error', { message: 'An error occurred while processing your payment.' });
@@ -777,13 +786,13 @@ app.post('/payment_gateway/payumoney', (req, res) => {
     const paymentData = {
       key: MERCHANT_KEY,
       txnid: txnid,
-      amount: amount,
+      amount: 550,
       productinfo: productinfo,
       firstname: name,
       email: email,
       phone: phone,
-      surl: 'http://localhost:3000/payment/success',
-      furl: 'http://localhost:3000/payment/fail',
+      surl: `http://localhost:4000/payment/success?amount=${amount}`,
+      furl: 'http://localhost:4000/payment/fail',
       hash: hash,
       service_provider: 'payu_paisa',
     };
