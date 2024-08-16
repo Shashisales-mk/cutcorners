@@ -62,7 +62,7 @@ app.use(session({
   store: MongoStore.create({
     mongoUrl: 'mongodb://CutCorner:cutcorner1234@93.127.195.9:27017/cutcorners',
     collectionName: 'sessions',
-}),
+  }),
   cookie: {
     maxAge: 48 * 60 * 60 * 1000,
   },
@@ -168,7 +168,7 @@ app.use('/section', sectionRoutes);
 app.use('/theatreimages', imageRoutes);
 
 
-const MERCHANT_KEY = 'GTTcTd';
+const MERCHANT_KEY = process.env.PAYU_MERCHANT_KEY;
 const MERCHANT_SALT = process.env.PAYU_MERCHANT_SALT;
 const PAYU_BASE_URL = 'https://secure.payu.in/_payment';
 
@@ -179,7 +179,7 @@ const PAYU_BASE_URL = 'https://secure.payu.in/_payment';
 
 
 
-app.get("/admin-panel", isAdmin , async (req, res) => {
+app.get("/admin-panel", isAdmin, async (req, res) => {
   try {
     const { search, sortBy } = req.query;
 
@@ -216,7 +216,7 @@ app.get("/admin-panel", isAdmin , async (req, res) => {
     const availableSlots = await Slot.find({ isAvailable: true });
     const menuItems = await MenuItem.find();
     const pages = await Page.find().sort({ createdAt: -1 });
-    const bookings = await Booking.find().sort({createdAt: -1})
+    const bookings = await Booking.find().sort({ createdAt: -1 })
     const sections = await Section.find();
     const screens = await Screen.find();
     const images = await Theatreimages.find();
@@ -228,33 +228,33 @@ app.get("/admin-panel", isAdmin , async (req, res) => {
     // If a date is provided, filter the slots
     if (req.query.date) {
       const selectedDate = new Date(req.query.date);
-      
-      ptSlots = ptSlots.filter(slot => 
-        slot.privateScreen1Available && 
-        slot.privateScreen2Available && 
-        !slot.unavailableDates.some(ud => 
-          ud.date.toDateString() === selectedDate.toDateString() && 
+
+      ptSlots = ptSlots.filter(slot =>
+        slot.privateScreen1Available &&
+        slot.privateScreen2Available &&
+        !slot.unavailableDates.some(ud =>
+          ud.date.toDateString() === selectedDate.toDateString() &&
           (ud.screen === 'Private Screen-1' || ud.screen === 'Private Screen-2')
         )
       );
 
-      phSlots = phSlots.filter(slot => 
-        slot.partyHallAvailable && 
-        !slot.unavailableDates.some(ud => 
-          ud.date.toDateString() === selectedDate.toDateString() && 
+      phSlots = phSlots.filter(slot =>
+        slot.partyHallAvailable &&
+        !slot.unavailableDates.some(ud =>
+          ud.date.toDateString() === selectedDate.toDateString() &&
           ud.screen === 'Party Hall'
         )
       );
     }
-    
+
 
     res.render('admin-panel', {
       search: search || '',
-      sortBy: sortBy || 'dateDesc', 
-      screens,sections, bookings, 
-      banners, products, categories, 
-      occasions, orders, slots, 
-      availableSlots, menuItems, 
+      sortBy: sortBy || 'dateDesc',
+      screens, sections, bookings,
+      banners, products, categories,
+      occasions, orders, slots,
+      availableSlots, menuItems,
       pages,
       ptSlots,
       phSlots,
@@ -331,7 +331,7 @@ app.get("/party-hall", async (req, res) => {
 })
 app.get('/private-theater', async (req, res) => {
   let screens = await Screen.find();
-  
+
   // If no screens in database, create default ones
   if (screens.length === 0) {
     const defaultScreens = [
@@ -341,7 +341,7 @@ app.get('/private-theater', async (req, res) => {
     await Screen.insertMany(defaultScreens);
     screens = await Screen.find();
   }
-  
+
   res.render('private-theater', { screens });
 });
 app.get("/screening", async (req, res) => {
@@ -353,7 +353,7 @@ app.get("/testp", async (req, res) => {
 // app.get("/love-theme", async (req, res) => {
 //   try {
 //     const section = await Section.findOne({ name: "Love Theme" });
-    
+
 //     // if (!section) {
 //     //   return res.status(404).send('Love Theme section not found');
 //     // }
@@ -394,19 +394,19 @@ app.get('/section/:id', async (req, res) => {
 app.get('/:pageName', async (req, res, next) => {
   try {
     const pageName = req.params.pageName;
-    
+
     if (pageName === 'favicon.ico') {
       return next();
     }
-    
+
     const page = await Page.findOne({ name: pageName }).populate('theme').populate('sections');
     console.log(page, "page");
-    
+
     if (!page) {
       console.log(`Page not found: ${pageName}`);
       return next();
     }
-    
+
     res.render('page-template', {
       page,
       sections: page.sections || [], // Pass the sections here
@@ -465,7 +465,7 @@ app.post('/create-page', async (req, res) => {
           body: options.body || ''
         }, { async: true });
 
-        return ejs.render(layoutContent, { 
+        return ejs.render(layoutContent, {
           body: pageContent,
           include: (file) => {
             if (file === '../includes/navbar') return navbarContent;
@@ -546,7 +546,7 @@ app.delete('/delete-page/:id', isAdmin, async (req, res) => {
 // GET route to fetch current images
 app.get('/admin/screen-images', async (req, res) => {
   let screens = await Screen.find();
-  
+
   // If no screens in database, create default ones
   if (screens.length === 0) {
     const defaultScreens = [
@@ -556,7 +556,7 @@ app.get('/admin/screen-images', async (req, res) => {
     await Screen.insertMany(defaultScreens);
     screens = await Screen.find();
   }
-  
+
   res.render('/private-theater', { screens });
 });
 
@@ -719,7 +719,9 @@ app.post('/verify-otp', async (req, res) => {
 // payment Gateway Setting
 
 app.get('/pay', (req, res) => {
-  res.render('payU-form'); 
+  
+  res.render('payU-form');
+  
 });
 const logger = console; // You might want to use a more robust logging solution in production
 
@@ -727,11 +729,11 @@ app.get('/payment/success', (req, res) => {
   logger.info('Payment success callback received');
   logger.info('Query parameters:', req.query);
   logger.info('Body:', req.body);
-  
+
   try {
     // Here you should verify the payment status with PayU
     // For example, by calling their verification API
-    
+
     res.render('paymentsucess');
   } catch (error) {
     logger.error('Error in success callback:', error);
@@ -743,7 +745,7 @@ app.get('/payment/fail', (req, res) => {
   logger.info('Payment failure callback received');
   logger.info('Query parameters:', req.query);
   logger.info('Body:', req.body);
-  
+
   try {
     res.render('paymentfail');
   } catch (error) {
@@ -754,18 +756,23 @@ app.get('/payment/fail', (req, res) => {
 
 app.post('/payment_gateway/payumoney', (req, res) => {
   logger.info('Payment initiation request received');
-  
+ 
+
   try {
     const { amount, phone, email, name } = req.body;
     const txnid = 'txn' + Date.now(); // Generate a unique transaction ID
     const productinfo = "Test Product";
-    
+
     logger.info('Payment details:', { amount, phone, email, name, txnid, productinfo });
 
     const hashString = `${MERCHANT_KEY}|${txnid}|${amount}|${productinfo}|${name}|${email}|||||||||||${MERCHANT_SALT}`;
     const sha = new jsSHA('SHA-512', "TEXT");
     sha.update(hashString);
     const hash = sha.getHash("HEX");
+
+    console.log('Hash String:', hashString);
+  console.log('MERCHANT_KEY:', MERCHANT_KEY);
+  console.log('MERCHANT_SALT:', MERCHANT_SALT);
 
     const paymentData = {
       key: MERCHANT_KEY,
@@ -792,9 +799,9 @@ app.post('/payment_gateway/payumoney', (req, res) => {
         logger.error('Error in PayU request:', error);
         return res.status(500).send({ status: false, message: error.toString() });
       }
-      
+
       logger.info('PayU response received', { statusCode: httpResponse.statusCode });
-      
+
       if (httpResponse.statusCode === 200) {
         res.send(body);
       } else if (httpResponse.statusCode >= 300 && httpResponse.statusCode <= 400) {
@@ -805,6 +812,8 @@ app.post('/payment_gateway/payumoney', (req, res) => {
         res.status(500).send({ status: false, message: 'Unexpected response from payment gateway' });
       }
     });
+
+  
   } catch (error) {
     logger.error('Error in payment initiation:', error);
     res.status(500).send({ status: false, message: 'An error occurred while initiating the payment' });
