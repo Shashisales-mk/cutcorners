@@ -794,7 +794,6 @@ app.post('/payment_gateway/payumoney', (req, res) => {
       surl: `https://cutcorners.in/payment/success?amount=${amount}`,
       furl: 'https://cutcorners.in/payment/fail',
       hash: hash,
-      service_provider: 'payu_paisa',
     };
 
     logger.info('Sending request to PayU');
