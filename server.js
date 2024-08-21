@@ -726,6 +726,7 @@ app.post('/verify-otp', async (req, res) => {
 
 app.get('/pay', (req, res) => {
   
+  
   res.render('payU-form');
   
 });
@@ -735,11 +736,182 @@ app.get('/payment/success', (req, res) => {
   logger.info('Payment success callback received');
   logger.info('Query parameters:', req.query);
   logger.info('Body:', req.body);
-  const amount = req.query.params;
+  const amount = req.query.amount;
+  const email = req.query.email;
+  const name = req.query.name;
 
   try {
-    // Here you should verify the payment status with PayU
-    // For example, by calling their verification API
+
+    const htmlTemp = `
+    <!DOCTYPE html>
+ <html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Shashi sales and marketing</title>
+
+        <style>
+._failed {
+border-bottom: solid 4px red !important;
+}
+
+._failed i {
+color: red !important;
+}
+
+.bl {
+background-color: black;
+}
+
+.container {
+width: 100%;
+margin-top: 6rem;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+
+._success {
+box-shadow: 0 15px 25px #00000019;
+padding: 45px;
+width: 100%;
+text-align: center;
+margin: 40px auto;
+border-bottom: solid 4px #28a745;
+}
+
+._success i {
+font-size: 55px;
+color: #28a745;
+}
+
+._success h2 {
+margin-bottom: 12px;
+font-size: 40px;
+font-weight: 500;
+line-height: 1.2;
+margin-top: 10px;
+}
+
+._success p {
+margin-bottom: 20px;
+font-size: 18px;
+color: #495057;
+font-weight: 500;
+}
+a{
+color: blue;
+font-size: 1.2rem;
+font-weight: bold;
+text-decoration: underline;
+
+}
+h3{
+font-size: 1.5rem;
+margin-bottom: 20px;
+}
+span{
+font-size: 2rem;
+color: #28a745;
+}
+@media screen and (max-width:400px) {
+._success{
+    padding: 20px;
+    width: 95%;
+}
+}
+</style>
+</head>
+<body>
+<style>
+._failed {
+border-bottom: solid 4px red !important;
+}
+
+._failed i {
+color: red !important;
+}
+
+.bl {
+background-color: black;
+}
+
+.container {
+width: 100%;
+margin-top: 6rem;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+
+._success {
+box-shadow: 0 15px 25px #00000019;
+padding: 45px;
+width: 100%;
+text-align: center;
+margin: 40px auto;
+border-bottom: solid 4px #28a745;
+}
+
+._success i {
+font-size: 55px;
+color: #28a745;
+}
+
+._success h2 {
+margin-bottom: 12px;
+font-size: 40px;
+font-weight: 500;
+line-height: 1.2;
+margin-top: 10px;
+}
+
+._success p {
+margin-bottom: 20px;
+font-size: 18px;
+color: #495057;
+font-weight: 500;
+}
+a{
+color: blue;
+font-size: 1.2rem;
+font-weight: bold;
+text-decoration: underline;
+
+}
+h3{
+font-size: 1.5rem;
+margin-bottom: 20px;
+}
+span{
+font-size: 2rem;
+color: #28a745;
+}
+</style>
+
+<div class="container">
+<div class="row justify-content-center">
+<div class="col-md-5">
+    <div class="message-box _success">
+        <i class="fa fa-check-circle" aria-hidden="true"></i>
+        <h2> Your payment was successful </h2>
+        <h3>Amount paid: <span>₹${amount}</span></h3>
+        <p> Thank you ${name} for your payment. we will <br>
+            be in contact with more details shortly </p>
+    </div>
+</div>
+</div>
+
+
+</div>
+</body>
+</html>
+`
+
+    Templatesender(email, htmlTemp, "Payment confirmation from cutcorners");
+    
 
     res.render('paymentsucess' , {
       amount
@@ -792,7 +964,7 @@ app.post('/payment_gateway/payumoney', (req, res) => {
       firstname: name,
       email: email,
       phone: phone,
-      surl: `https://cutcorners.in/payment/success?amount=${amount}`,
+      surl: `https://cutcorners.in/payment/success?amount=${amount}&email=${email}&name=${name}`,
       furl: 'https://cutcorners.in/payment/fail',
       hash: hash,
       service_provider: 'payu_paisa',
