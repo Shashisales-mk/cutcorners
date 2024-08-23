@@ -959,6 +959,7 @@ app.post('/payment_gateway/payumoney', (req, res) => {
     const { amount, phone, email, name } = req.body;
     const txnid = 'txn' + Date.now(); // Generate a unique transaction ID
     const productinfo = "Test Product";
+    amount = 550;
      
 
     logger.info('Payment details:', { amount, phone, email, name, txnid, productinfo });
