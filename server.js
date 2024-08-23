@@ -159,6 +159,12 @@ app.use(fetchProducts);
 
 
 
+
+
+
+
+
+
 // Routes
 app.use('/', bannerRoutes);
 
@@ -734,6 +740,7 @@ const logger = console; // You might want to use a more robust logging solution 
 
 app.get('/payment/success', (req, res) => {
   logger.info('Payment success callback received');
+  console.log('Success route hit:', new Date().toISOString());
   logger.info('Query parameters:', req.query);
   logger.info('Body:', req.body);
   const amount = req.query.amount;
@@ -922,6 +929,14 @@ color: #28a745;
   }
 });
 
+app.post("/payment/success" , (req, res)=>{
+  const amount = req.query.amount;
+  const email = req.query.email;
+  const name = req.query.name;
+  res.redirect(`/payment/success?amount=${amount}&email=${email}&name=${name}`)
+})
+
+
 app.get('/payment/fail', (req, res) => {
   logger.info('Payment failure callback received');
   logger.info('Query parameters:', req.query);
@@ -934,6 +949,7 @@ app.get('/payment/fail', (req, res) => {
     res.status(500).render('error', { message: 'An error occurred while processing your payment.' });
   }
 });
+
 
 app.post('/payment_gateway/payumoney', (req, res) => {
   logger.info('Payment initiation request received');
@@ -965,6 +981,7 @@ app.post('/payment_gateway/payumoney', (req, res) => {
       email: email,
       phone: phone,
       surl: `https://cutcorners.in/payment/success?amount=${amount}&email=${email}&name=${name}`,
+      // surl: `http://localhost:4000/payment/success?amount=${amount}&email=${email}&name=${name}`,
       furl: 'https://cutcorners.in/payment/fail',
       hash: hash,
       service_provider: 'payu_paisa',

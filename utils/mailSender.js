@@ -4,8 +4,8 @@ const nodemailer = require('nodemailer');
 
 
 
-const fromUser = 'suryakant.webdeveloper@gmail.com';
-const password = 'mmke dvcj eily twap';
+const fromUser = 'cutcorners.in@gmail.com';
+const password = 'ylcg lxtl jbgo jvfw';
 
 
 // Create a reusable transporter object
